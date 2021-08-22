@@ -1,5 +1,6 @@
 from flask import Flask
 from config import Config
+from .models import db
 
 
 def init_app():
@@ -7,6 +8,8 @@ def init_app():
     app.config.from_object(Config)
 
     with app.app_context():
+        db.init_app(app)
+        db.create_all()
         '''
         TODO import blueprints
         TODO register blueprints

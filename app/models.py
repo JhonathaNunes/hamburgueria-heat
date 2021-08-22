@@ -44,8 +44,8 @@ class Product(db.Model):
 
 class Role(db.Model):
     __tablename__ = 'roles'
-    code = db.Model(db.String(15))
-    description = db.Model(db.Text)
+    code = db.Column(db.String(15))
+    description = db.Column(db.Text)
 
 
 class Users(db.Model):
