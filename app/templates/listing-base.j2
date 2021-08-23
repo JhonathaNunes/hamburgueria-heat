@@ -1,0 +1,39 @@
+{% extends "admin-base.j2" %}
+{% block content %}
+<h2 class="page-title">{{title}}</h2>
+<div class="d-flex justify-content-end">
+    <a class="btn button-dark" href="./novo">
+        Adicionar
+    </a>
+</div>
+{% if not data %}
+    <div class="d-flex flex-grow-1 justify-content-center align-items-center">
+        Não há {{title.lower()}} cadastrados
+    </div>
+{% else %}
+    <div class="flex-grow-1">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                {% for column in columns %}
+                    <th>
+                        {{column}}
+                    </th>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in data %}
+                <tr>
+                {% for col in row %}
+                    <td>
+                        {{col}}
+                    </td>
+                {% endfor %}
+                </th>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+{% endblock %}

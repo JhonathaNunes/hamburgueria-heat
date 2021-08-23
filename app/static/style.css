@@ -55,3 +55,14 @@ h1, h2, h3, h4, h5 {
     width: 500px;
     height: auto;
 }
+
+.page-title {
+    padding-top: 64px;
+    border-bottom: 1px solid #171717;
+    margin-bottom: 32px;
+}
+
+.button-dark {
+    background-color: #171717 !important;
+    color: #E2E2E2 !important;
+}

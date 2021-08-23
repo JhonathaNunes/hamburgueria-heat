@@ -15,7 +15,9 @@ def init_app():
         TODO register blueprints
         '''
         from .admin import admin
+        from .client import client
 
         app.register_blueprint(admin.admin_bp)
+        app.register_blueprint(client.client_bp)
 
         return app
