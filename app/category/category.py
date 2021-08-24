@@ -10,7 +10,6 @@ category_bp = Blueprint(
 def index():
     categories = Category.query.all()
 
-    print(categories)
     return render_template(
         "category_listing.j2",
         title="Categorias",
