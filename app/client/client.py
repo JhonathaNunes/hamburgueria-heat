@@ -8,6 +8,6 @@ client_bp = Blueprint(
 @client_bp.route("/admin/client/", methods=["GET"])
 def index():
     return render_template(
-        "listing-base.j2",
+        "listing_base.j2",
         title="Clientes"
     )

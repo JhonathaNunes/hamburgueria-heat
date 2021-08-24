@@ -10,14 +10,13 @@ def init_app():
     with app.app_context():
         db.init_app(app)
         db.create_all()
-        '''
-        TODO import blueprints
-        TODO register blueprints
-        '''
+
         from .admin import admin
         from .client import client
+        from .category import category
 
         app.register_blueprint(admin.admin_bp)
         app.register_blueprint(client.client_bp)
+        app.register_blueprint(category.category_bp)
 
         return app

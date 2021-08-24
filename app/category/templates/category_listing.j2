@@ -1,0 +1,13 @@
+{% extends "listing_base.j2" %}
+{% block table_body %}
+{% for row in data %}
+    <tr>
+        <td>
+            {{row.name}}
+        </td>
+        <td>
+            {{row.description}}
+        </td>
+    </tr>
+{% endfor %}
+{% endblock  %}

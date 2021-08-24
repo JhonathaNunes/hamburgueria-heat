@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-    background-color: #E2E2E2 !important;
+    background-color: #FCFCFC !important;
 }
 
 * {
@@ -65,4 +65,21 @@ h1, h2, h3, h4, h5 {
 .button-dark {
     background-color: #171717 !important;
     color: #E2E2E2 !important;
+}
+
+.button-outlined {
+    background-color: transparent !important;
+    color: #171717 !important;
+    border: 1px solid #171717 !important;
+}
+
+.form-style {
+    width: 70%;
+    border: 1px solid #171717;
+    padding: 32px;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 16px;
 }
