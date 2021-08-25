@@ -1,18 +1,44 @@
 {% extends "admin_base.j2" %}
+{% if category %}
+    {% block aditional_header %}
+    <script>
+        function deleteCategory() {
+            if (!confirm("Você tem certeza?")) return;
+            xhr = new XMLHttpRequest();
+            xhr.open('DELETE', "/admin/category/{{category.id}}");
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.readyState !== 4) return;
+                if (xhr.status === 200 || xhr.status === 404) {
+                    document.open();
+                    document.write(xhr.responseText);
+                    document.close();
+                } else {
+                    alert('Erro ' + xhr.status);
+                }
+            };
+            xhr.send();
+        }
+    </script>
+    {% endblock %}
+{% endif %}
 {% block content %}
 <h2 class="page-title">{{title}}</h2>
 <div class="d-flex justify-content-center align-items-center">
-    <form class="form-style card" method="POST" action="/admin/category">
+    <form class="form-style card" method="POST" action="{{action}}">
         <div class="form-group">
             <label for="name">Nome</label>
-            <input type="text" id="name" name="name" class="form-control" required/>
+            <input type="text" id="name" name="name" class="form-control" required value="{{category.name}}"/>
         </div>
         <div class="form-group">
             <label for="description">Descrição</label>
-            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            <textarea class="form-control" id="description" name="description" rows="3" required>{{category.description}}</textarea>
         </div>
         <div class="form-group d-flex justify-content-between">
-            <button class="btn button-outlined" onClick="history.back()">Cancelar</button>
+            <button type="button" class="btn button-outlined" onClick="history.back()">Cancelar</button>
+            {% if category %}
+            <button type="button" class="btn button-outlined" onClick="deleteCategory()">Excluir</button>
+            {% endif %}
             <button type="submit" class="btn button-dark">Salvar</button>
         </div>
     </form>
