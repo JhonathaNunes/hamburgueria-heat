@@ -18,7 +18,7 @@ class Client(db.Model):
     street = db.Column(db.String(255), nullable=False)
     number = db.Column(db.String(6), nullable=False)
     district = db.Column(db.String(50), nullable=False)
-    orders = db.Relationship('Order', backref='clients', lazy='dynamic')
+    orders = db.relationship('Order', backref='clients', lazy='dynamic')
 
 
 class Status(db.Model):
@@ -31,7 +31,7 @@ class Category(db.Model):
     __tablename__ = 'categories'
     name = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    products = db.Relationship('Product', backref='categories', lazy='dynamic')
+    products = db.relationship('Product', backref='categories', lazy='dynamic')
 
 
 class Product(db.Model):
@@ -42,7 +42,7 @@ class Product(db.Model):
     quantity = db.Column(db.Integer)
     price = db.Column(db.Float(precision='7,2'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-    category = db.Relationship('Category')
+    category = db.relationship('Category')
 
 
 class Role(db.Model):
@@ -71,15 +71,15 @@ class Order(db.Model):
         db.ForeignKey('status.id'),
         nullable=False
     )
-    status = db.Relationship('Status')
+    status = db.relationship('Status')
     client_id = db.Column(
         db.Integer,
         db.ForeignKey('clients.id'),
         nullable=False
     )
-    client = db.Relationship('Client')
+    client = db.relationship('Client')
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    user = db.Relationship('User')
+    user = db.relationship('User')
     created_at = db.Column(
         db.DateTime,
         nullable=False,
