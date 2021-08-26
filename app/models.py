@@ -51,7 +51,7 @@ class Role(db.Model):
     description = db.Column(db.Text, nullable=False)
 
 
-class Users(db.Model):
+class User(db.Model):
     __tablename__ = 'users'
     name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(20), nullable=False)
