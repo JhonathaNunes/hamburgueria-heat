@@ -16,7 +16,7 @@ def index():
         "category_listing.j2",
         title="Categorias",
         path_new="/admin/category/new",
-        columns=["Nome", "Descrição", "Visualizar"],
+        columns=columns,
         data=categories
     )
 
