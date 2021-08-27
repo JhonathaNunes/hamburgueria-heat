@@ -1,0 +1,84 @@
+{% extends "admin_base.j2" %}
+{% if user %}
+    {% block aditional_header %}
+    <script>
+        function deleteUser() {
+            if (!confirm("Você tem certeza?")) return;
+            xhr = new XMLHttpRequest();
+            xhr.open('DELETE', "/admin/user/{{user.id}}");
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.readyState !== 4) return;
+                if (xhr.status === 200 || xhr.status === 404) {
+                    document.open();
+                    document.write(xhr.responseText);
+                    document.close();
+                } else {
+                    alert('Erro ' + xhr.status);
+                }
+            };
+            xhr.send();
+        }
+    </script>
+    {% endblock %}
+{% endif %}
+{% block content %}
+<h2 class="page-title">{{title}}</h2>
+<div class="d-flex justify-content-center align-items-center">
+    <form class="form-style card" method="POST" action="{{action}}">
+        <div class="form-group">
+            <label for="name">Nome</label>
+            <input type="text" id="name" name="name" class="form-control" required value="{{user.name}}"/>
+        </div>
+        <div class="form-group">
+            <label for="description">Nome do Usuário</label>
+            <input type="text" id="username" name="username" class="form-control" required value="{{user.username}}"/>
+        </div>
+        <div class="form-group">
+            <label for="description">Senha</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-control"
+                {% if user %} required {% endif %}/>
+        </div>
+        <div class="form-group">
+            <label for="description">Permissão do Usuário</label>
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="radio"
+                    id="adm"
+                    name="role"
+                    value="A"
+                    {% if role is defined and role.code == 'A' %} checked {% endif %}
+                >
+                <label class="form-check-label" for="adm">
+                    Administrador
+                </label>
+            </div>
+            <div class="form-check">
+                <input
+                    class="form-check-input"
+                    type="radio"
+                    id="usr"
+                    name="role"
+                    value="U"
+                    {% if role is defined and role.code == 'U' %} checked {% endif %}
+                >
+                <label class="form-check-label" for="usr">
+                        Usuário Comum
+                </label>
+            </div>
+        </div>
+        <div class="form-group d-flex justify-content-between">
+            <button type="button" class="btn button-outlined" onClick="history.back()">Cancelar</button>
+            {% if user %}
+            <button type="button" class="btn button-outlined" onClick="deleteUser()">Excluir</button>
+            {% endif %}
+            <button type="submit" class="btn button-dark">Salvar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
