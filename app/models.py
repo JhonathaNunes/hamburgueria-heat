@@ -56,12 +56,15 @@ class User(db.Model):
     name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    user_roles = db.relationship('UserRole', backref='users', lazy=True)
 
 
 class UserRole(db.Model):
     __tablename__ = 'user_roles'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User')
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
+    role = db.relationship('Role')
 
 
 class Order(db.Model):
