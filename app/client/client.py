@@ -1,11 +1,11 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from app.models import db, Client
 
 client_bp = Blueprint(
     "client", __name__, template_folder="templates", static_folder="static"
 )
 
-columns = ["full_name", "phone", "cpf", "street", "number", "district"]
+columns = ["Nome", "Telefone", "CPF", "Visualizar"]
 
 
 @client_bp.route("/admin/client/<int:id>", methods=["POST"])
@@ -52,7 +52,7 @@ def client_form():
         "client_form.j2",
         title="Novo cliente",
         action="/admin/client",
-        category=None
+        client=None
     )
 
 
@@ -60,7 +60,7 @@ def client_form():
 def create_client():
     form = request.form
 
-    client = Category()
+    client = Client()
 
     client.full_name = form["full_name"]
     client.phone = form["phone"]
@@ -91,7 +91,7 @@ def client_view(id: int):
     return render_template(
         "client_form.j2",
         title="Editar cliente",
-        category=client,
+        client=client,
         action=f"/admin/client/{id}"
     )
 
