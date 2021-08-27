@@ -7,13 +7,6 @@ client_bp = Blueprint(
 
 columns = ["full_name", "phone", "cpf", "street", "number", "district"]
 
-@client_bp.route("/admin/client/", methods=["GET"])
-def index():
-    return render_template(
-        "listing_base.j2",
-        title="Clientes"
-    )
-
 @client_bp.route("/admin/client/<int:id>", methods=["POST"])
 def update_client(id: int):
     form = request.form
@@ -95,7 +88,7 @@ def client_view(id: int):
     client = Client.query.get(id)
 
     return render_template(
-        "category_form.j2",
+        "client_form.j2",
         title="Editar cliente",
         category=client,
         action=f"/admin/client/{id}"
@@ -112,7 +105,7 @@ def delete_client(id: int):
     clients = Client.query.all()
 
     return render_template(
-        "category_listing.j2",
+        "client_listing.j2",
         title="Categorias",
         path_new="/admin/client/new",
         columns=columns,
