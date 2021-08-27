@@ -7,6 +7,7 @@ client_bp = Blueprint(
 
 columns = ["full_name", "phone", "cpf", "street", "number", "district"]
 
+
 @client_bp.route("/admin/client/<int:id>", methods=["POST"])
 def update_client(id: int):
     form = request.form
