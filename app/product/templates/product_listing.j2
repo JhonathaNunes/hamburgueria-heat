@@ -1,0 +1,24 @@
+{% extends "listing_base.j2" %}
+{% block table_body %}
+{% for row in data %}
+    <tr>
+        <td>
+            {{row.name}}
+        </td>
+        <td>
+            {{row.quantity}}
+        </td>
+        <td>
+            {{row.price}}
+        </td>
+        <td>
+            {{row.category.name}}
+        </td>
+        <td>
+            <a href="/admin/product/{{row.id}}">
+                <img src="/static/images/eye.svg" alt="Visualizar"/>
+            </a>
+        </td>
+    </tr>
+{% endfor %}
+{% endblock  %}
