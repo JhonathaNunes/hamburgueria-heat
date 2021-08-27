@@ -5,7 +5,7 @@ user_bp = Blueprint(
     "user", __name__, template_folder="templates", static_folder="static"
 )
 
-columns = ["Nome", "Nome do Usuário", "Permissão do Usuário", "Visualizar"]
+columns = ["Nome", "Nome do Usuário", "Permissão", "Visualizar"]
 
 
 @user_bp.route("/admin/user/", methods=["GET"])
@@ -112,7 +112,8 @@ def update_user(id: int):
 
     user.name = form["name"]
     user.username = form["username"]
-    user.password = form["password"]
+    if form["password"]:
+        user.password = form["password"]
 
     # Atualiza role do usuário
     form_role = form["role"]
