@@ -34,6 +34,7 @@ def update_client(id: int):
         message="Cliente atualizado"
     )
 
+
 @client_bp.route("/admin/client/", methods=["GET"])
 def index():
     clients = Client.query.all()
@@ -45,6 +46,7 @@ def index():
         columns=columns,
         data=clients
     )
+
 
 @client_bp.route("/admin/client/new", methods=["GET"])
 def client_form():
@@ -113,6 +115,3 @@ def delete_client(id: int):
         data=clients,
         message="Cliente exluído"
     )
-
-
-
