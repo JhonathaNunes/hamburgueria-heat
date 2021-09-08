@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request
+from werkzeug.utils import redirect
 from app.models import db, Client
 
 client_bp = Blueprint(
@@ -6,6 +7,19 @@ client_bp = Blueprint(
 )
 
 columns = ["Nome", "Telefone", "CPF", "Visualizar"]
+
+
+@client_bp.route("/admin/client/", methods=["GET"])
+def index():
+    clients = Client.query.all()
+
+    return render_template(
+        "client_listing.j2",
+        title="Clientes",
+        path_new="/admin/client/new",
+        columns=columns,
+        data=clients
+    )
 
 
 @client_bp.route("/admin/client/<int:id>", methods=["POST"])
@@ -23,29 +37,7 @@ def update_client(id: int):
 
     db.session.commit()
 
-    clients = Client.query.all()
-
-    return render_template(
-        "client_listing.j2",
-        title="Clientes",
-        path_new="/admin/client/new",
-        columns=columns,
-        data=clients,
-        message="Cliente atualizado"
-    )
-
-
-@client_bp.route("/admin/client/", methods=["GET"])
-def index():
-    clients = Client.query.all()
-
-    return render_template(
-        "client_listing.j2",
-        title="Clientes",
-        path_new="/admin/client/new",
-        columns=columns,
-        data=clients
-    )
+    return redirect("/admin/client/")
 
 
 @client_bp.route("/admin/client/new", methods=["GET"])
@@ -74,16 +66,7 @@ def create_client():
     db.session.add(client)
     db.session.commit()
 
-    clients = Client.query.all()
-
-    return render_template(
-        "client_listing.j2",
-        title="Clientes",
-        path_new="/admin/client/new",
-        message="Cliente cadastrado com sucesso",
-        columns=columns,
-        data=clients
-    )
+    return redirect("/admin/client/")
 
 
 @client_bp.route("/admin/client/<int:id>", methods=["GET"])
@@ -105,13 +88,4 @@ def delete_client(id: int):
     db.session.delete(client)
     db.session.commit()
 
-    clients = Client.query.all()
-
-    return render_template(
-        "client_listing.j2",
-        title="Categorias",
-        path_new="/admin/client/new",
-        columns=columns,
-        data=clients,
-        message="Cliente exluído"
-    )
+    return redirect("/admin/client/")

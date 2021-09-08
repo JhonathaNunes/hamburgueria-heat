@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request
+from werkzeug.utils import redirect
 from app.models import db, Category
 
 category_bp = Blueprint(
@@ -43,16 +44,7 @@ def create_category():
     db.session.add(category)
     db.session.commit()
 
-    categories = Category.query.all()
-
-    return render_template(
-        "category_listing.j2",
-        title="Categorias",
-        path_new="/admin/category/new",
-        message="Categoria cadastrada com sucesso",
-        columns=columns,
-        data=categories
-    )
+    return redirect("/admin/category/")
 
 
 @category_bp.route("/admin/category/<int:id>", methods=["GET"])
@@ -74,16 +66,7 @@ def delete_category(id: int):
     db.session.delete(category)
     db.session.commit()
 
-    categories = Category.query.all()
-
-    return render_template(
-        "category_listing.j2",
-        title="Categorias",
-        path_new="/admin/category/new",
-        columns=columns,
-        data=categories,
-        message="Categoria exluída"
-    )
+    return redirect("/admin/category/")
 
 
 @category_bp.route("/admin/category/<int:id>", methods=["POST"])
@@ -96,13 +79,4 @@ def update_category(id: int):
     category.description = form["description"]
     db.session.commit()
 
-    categories = Category.query.all()
-
-    return render_template(
-        "category_listing.j2",
-        title="Categorias",
-        path_new="/admin/category/new",
-        columns=columns,
-        data=categories,
-        message="Categoria atualizada"
-    )
+    return redirect("/admin/category/")

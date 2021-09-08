@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request
+from werkzeug.utils import redirect
 from app.models import Category, db, Product
 
 product_dp = Blueprint(
@@ -49,16 +50,7 @@ def create_product():
     db.session.add(product)
     db.session.commit()
 
-    products = Product.query.all()
-
-    return render_template(
-        "product_listing.j2",
-        title="Produtos",
-        path_new="/admin/category/new",
-        message="Produto cadastrado",
-        columns=columns,
-        data=products
-    )
+    return redirect("/admin/product/")
 
 
 @product_dp.route("/admin/product/<int:id>", methods=["GET"])
@@ -82,16 +74,7 @@ def delete_product(id: int):
     db.session.delete(product)
     db.session.commit()
 
-    products = Product.query.all()
-
-    return render_template(
-        "product_listing.j2",
-        title="Produtos",
-        path_new="/admin/product/new",
-        columns=columns,
-        data=products,
-        message="Produto exluído"
-    )
+    return redirect("/admin/product/")
 
 
 @product_dp.route("/admin/product/<int:id>", methods=["POST"])
@@ -108,13 +91,4 @@ def update_product(id: int):
 
     db.session.commit()
 
-    products = Product.query.all()
-
-    return render_template(
-        "product_listing.j2",
-        title="Produtos",
-        path_new="/admin/product/new",
-        message="Produto autalizado",
-        columns=columns,
-        data=products
-    )
+    return redirect("/admin/product/")
