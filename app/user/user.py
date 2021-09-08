@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request
+from werkzeug.utils import redirect
 from app.models import db, User, UserRole, Role
+from werkzeug.security import generate_password_hash
 
 user_bp = Blueprint(
     "user", __name__, template_folder="templates", static_folder="static"
@@ -39,7 +41,7 @@ def create_user():
 
     user.name = form["name"]
     user.username = form["username"]
-    user.password = form["password"] 
+    user.password = generate_password_hash(form["password"])
 
     db.session.add(user)
     db.session.flush()
@@ -54,16 +56,7 @@ def create_user():
 
     db.session.commit()
 
-    users = User.query.all()
-
-    return render_template(
-        "user_listing.j2",
-        title="Usuários",
-        path_new="/admin/user/new",
-        message="Usuário cadastrado com sucesso",
-        columns=columns,
-        data=users
-    )
+    return redirect('/admin/user/')
 
 
 @user_bp.route("/admin/user/<int:id>", methods=["GET"])
@@ -88,20 +81,11 @@ def delete_user(id: int):
     db.session.delete(user_role)
 
     user = User.query.get(id)
-    
+
     db.session.delete(user)
     db.session.commit()
 
-    users = User.query.all()
-
-    return render_template(
-        "user_listing.j2",
-        title="Usuários",
-        path_new="/admin/user/new",
-        columns=columns,
-        data=users,
-        message="Usuário exluído"
-    )
+    return redirect('/admin/user/')
 
 
 @user_bp.route("/admin/user/<int:id>", methods=["POST"])
@@ -123,13 +107,4 @@ def update_user(id: int):
 
     db.session.commit()
 
-    users = User.query.all()
-
-    return render_template(
-        "user_listing.j2",
-        title="Usuários",
-        path_new="/admin/user/new",
-        columns=columns,
-        data=users,
-        message="Usuário atualizado"
-    )
+    return redirect('/admin/user/')
