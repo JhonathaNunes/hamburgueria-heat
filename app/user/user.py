@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash
 from werkzeug.utils import redirect
 from app.models import db, User, UserRole, Role
 from werkzeug.security import generate_password_hash
@@ -56,6 +56,7 @@ def create_user():
 
     db.session.commit()
 
+    flash("Usuário cadastrado com sucesso")
     return redirect('/admin/user/')
 
 
@@ -85,6 +86,7 @@ def delete_user(id: int):
     db.session.delete(user)
     db.session.commit()
 
+    flash("Usuário deletado com sucesso")
     return redirect('/admin/user/')
 
 
@@ -107,4 +109,5 @@ def update_user(id: int):
 
     db.session.commit()
 
+    flash("Usuário atualizado com sucesso")
     return redirect('/admin/user/')

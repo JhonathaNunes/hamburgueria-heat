@@ -1,6 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy, Model
 import sqlalchemy as sa
 from datetime import datetime
+'''
+from werkzeug.security import generate_password_hash
+e para deshashegar você usa o
+check_password_hash
+'''
 
 
 class IdModel(Model):
