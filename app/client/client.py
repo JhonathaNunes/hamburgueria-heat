@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash
 from werkzeug.utils import redirect
 from app.models import db, Client
 
@@ -20,24 +20,6 @@ def index():
         columns=columns,
         data=clients
     )
-
-
-@client_bp.route("/admin/client/<int:id>", methods=["POST"])
-def update_client(id: int):
-    form = request.form
-
-    client = Client.query.get(id)
-
-    client.full_name = form["full_name"]
-    client.phone = form["phone"]
-    client.cpf = form["cpf"]
-    client.street = form["street"]
-    client.number = form["number"]
-    client.district = form["district"]
-
-    db.session.commit()
-
-    return redirect("/admin/client/")
 
 
 @client_bp.route("/admin/client/new", methods=["GET"])
@@ -66,6 +48,7 @@ def create_client():
     db.session.add(client)
     db.session.commit()
 
+    flash("Cliente cadastrado com sucesso")
     return redirect("/admin/client/")
 
 
@@ -88,4 +71,24 @@ def delete_client(id: int):
     db.session.delete(client)
     db.session.commit()
 
+    flash("Cliente deletado com sucesso")
+    return redirect("/admin/client/")
+
+
+@client_bp.route("/admin/client/<int:id>", methods=["POST"])
+def update_client(id: int):
+    form = request.form
+
+    client = Client.query.get(id)
+
+    client.full_name = form["full_name"]
+    client.phone = form["phone"]
+    client.cpf = form["cpf"]
+    client.street = form["street"]
+    client.number = form["number"]
+    client.district = form["district"]
+
+    db.session.commit()
+
+    flash("Cliente atualizado com sucesso")
     return redirect("/admin/client/")
