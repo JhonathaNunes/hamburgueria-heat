@@ -10,9 +10,7 @@
             xhr.onload = function() {
                 if (xhr.readyState !== 4) return;
                 if (xhr.status === 200 || xhr.status === 404) {
-                    document.open();
-                    document.write(xhr.responseText);
-                    document.close();
+                    window.location.replace("{{url_for("category.index")}}");
                 } else {
                     alert('Erro ' + xhr.status);
                 }

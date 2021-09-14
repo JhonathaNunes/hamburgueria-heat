@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, url_for
 from werkzeug.utils import redirect
 from app.models import db, Client
 
@@ -49,7 +49,7 @@ def create_client():
     db.session.commit()
 
     flash("Cliente cadastrado com sucesso")
-    return redirect("/admin/client/")
+    return redirect(url_for("client.index"))
 
 
 @client_bp.route("/admin/client/<int:id>", methods=["GET"])
@@ -72,7 +72,7 @@ def delete_client(id: int):
     db.session.commit()
 
     flash("Cliente deletado com sucesso")
-    return redirect("/admin/client/")
+    return {}
 
 
 @client_bp.route("/admin/client/<int:id>", methods=["POST"])
@@ -91,4 +91,4 @@ def update_client(id: int):
     db.session.commit()
 
     flash("Cliente atualizado com sucesso")
-    return redirect("/admin/client/")
+    return redirect(url_for("client.index"))
