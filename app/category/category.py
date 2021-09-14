@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, url_for
 from werkzeug.utils import redirect
 from app.models import db, Category
 
@@ -44,8 +44,8 @@ def create_category():
     db.session.add(category)
     db.session.commit()
 
-    flash("Cliente cadastrado com sucesso")
-    return redirect("/admin/category/")
+    flash("Categoria cadastrado com sucesso")
+    return redirect(url_for("category.index"))
 
 
 @category_bp.route("/admin/category/<int:id>", methods=["GET"])
@@ -67,8 +67,8 @@ def delete_category(id: int):
     db.session.delete(category)
     db.session.commit()
 
-    flash("Cliente cadastrado com sucesso")
-    return redirect("/admin/category/")
+    flash("Categoria excluída com sucesso")
+    return {}
 
 
 @category_bp.route("/admin/category/<int:id>", methods=["POST"])
@@ -81,5 +81,5 @@ def update_category(id: int):
     category.description = form["description"]
     db.session.commit()
 
-    flash("Cliente cadastrado com sucesso")
-    return redirect("/admin/category/")
+    flash("Categoria atualizada com sucesso")
+    return redirect(url_for("category.index"))

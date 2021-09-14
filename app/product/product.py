@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, url_for
 from werkzeug.utils import redirect
 from app.models import Category, db, Product
 
@@ -51,7 +51,7 @@ def create_product():
     db.session.commit()
 
     flash("Produto cadastrado com sucesso")
-    return redirect("/admin/product/")
+    return redirect(url_for("product.index"))
 
 
 @product_dp.route("/admin/product/<int:id>", methods=["GET"])
@@ -76,7 +76,7 @@ def delete_product(id: int):
     db.session.commit()
 
     flash("Produto deletado com sucesso")
-    return redirect("/admin/product/")
+    return {}
 
 
 @product_dp.route("/admin/product/<int:id>", methods=["POST"])
@@ -94,4 +94,4 @@ def update_product(id: int):
     db.session.commit()
 
     flash("Produto atualizado com sucesso")
-    return redirect("/admin/product/")
+    return redirect(url_for("product.index"))
