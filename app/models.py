@@ -23,6 +23,7 @@ class Client(db.Model):
     street = db.Column(db.String(255), nullable=False)
     number = db.Column(db.String(6), nullable=False)
     district = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
     orders = db.relationship('Order', backref='clients', lazy='dynamic')
 
 
@@ -61,6 +62,7 @@ class User(db.Model):
     name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
     user_roles = db.relationship('UserRole', backref='users', lazy=True)
 
 

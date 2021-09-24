@@ -16,3 +16,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = (f'mysql+pymysql://{__DB_USER}:{__DB_PASSWORD}'
                                f'@{__DB_HOST}:{__DB_PORT}/{__DB_NAME}')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    EMAIL_USER = environ.get("EMAIL_USER")
+    EMAIL_PASSWORD = environ.get("EMAIL_PASSWORD")
+    EMAIL_HOST = environ.get("EMAIL_HOST")
+    EMAIL_PORT = environ.get("EMAIL_PORT")

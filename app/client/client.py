@@ -1,12 +1,13 @@
 from flask import Blueprint, render_template, request, flash, url_for
 from werkzeug.utils import redirect
 from app.models import db, Client
+from app.email.mailer import Mailer
 
 client_bp = Blueprint(
     "client", __name__, template_folder="templates", static_folder="static"
 )
 
-columns = ["Nome", "Telefone", "CPF", "Visualizar"]
+columns = ["Nome", "E-mail", "Telefone", "CPF", "Visualizar"]
 
 
 @client_bp.route("/admin/client/", methods=["GET"])
@@ -44,6 +45,10 @@ def create_client():
     client.street = form["street"]
     client.number = form["number"]
     client.district = form["district"]
+    client.email = form["email"]
+
+    email = Mailer("new_client", "🍔⭐️ Novo cliente ⭐️🍔")
+    email.send_email(client)
 
     db.session.add(client)
     db.session.commit()
@@ -87,6 +92,7 @@ def update_client(id: int):
     client.street = form["street"]
     client.number = form["number"]
     client.district = form["district"]
+    client.email = form["email"]
 
     db.session.commit()
 

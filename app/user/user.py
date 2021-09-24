@@ -2,12 +2,13 @@ from flask import Blueprint, render_template, request, flash, url_for
 from werkzeug.utils import redirect
 from app.models import db, User, UserRole, Role
 from werkzeug.security import generate_password_hash
+from app.email.mailer import Mailer
 
 user_bp = Blueprint(
     "user", __name__, template_folder="templates", static_folder="static"
 )
 
-columns = ["Nome", "Nome do Usuário", "Permissão", "Visualizar"]
+columns = ["Nome", "Nome do Usuário", "E-mail", "Permissão", "Visualizar"]
 
 
 @user_bp.route("/admin/user/", methods=["GET"])
@@ -42,6 +43,10 @@ def create_user():
     user.name = form["name"]
     user.username = form["username"]
     user.password = generate_password_hash(form["password"])
+    user.email = form["email"]
+
+    email = Mailer("new_user", "🍔🔥 Novo usuário 🔥🍔")
+    email.send_email(user)
 
     db.session.add(user)
     db.session.flush()
