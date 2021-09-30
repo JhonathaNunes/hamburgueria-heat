@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, request, flash, url_for
-from werkzeug.utils import redirect
+from flask import Blueprint, render_template, request, flash, url_for, redirect
 from app.models import db, Category
 
 category_bp = Blueprint(
