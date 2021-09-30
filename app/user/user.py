@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask_login.utils import login_required
 from app.models import db, User, UserRole, Role
 from werkzeug.security import generate_password_hash
 
@@ -10,6 +11,7 @@ columns = ["Nome", "Nome do Usuário", "Permissão", "Visualizar"]
 
 
 @user_bp.route("/admin/user/", methods=["GET"])
+@login_required
 def index():
     users = User.query.all()
 
@@ -23,6 +25,7 @@ def index():
 
 
 @user_bp.route("/admin/user/new", methods=["GET"])
+@login_required
 def user_form():
     return render_template(
         "user_form.j2",
@@ -33,6 +36,7 @@ def user_form():
 
 
 @user_bp.route("/admin/user", methods=["POST"])
+@login_required
 def create_user():
     form = request.form
 
@@ -60,6 +64,7 @@ def create_user():
 
 
 @user_bp.route("/admin/user/<int:id>", methods=["GET"])
+@login_required
 def user_view(id: int):
     user = User.query.get(id)
     user_role = UserRole.query.filter_by(user_id=id).first()
@@ -75,6 +80,7 @@ def user_view(id: int):
 
 
 @user_bp.route("/admin/user/<int:id>", methods=["DELETE"])
+@login_required
 def delete_user(id: int):
     # Deleta role do usuário
     user_role = UserRole.query.filter_by(user_id=id).first()
@@ -90,6 +96,7 @@ def delete_user(id: int):
 
 
 @user_bp.route("/admin/user/<int:id>", methods=["POST"])
+@login_required
 def update_user(id: int):
     form = request.form
 

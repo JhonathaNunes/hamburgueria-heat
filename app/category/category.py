@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask_login.utils import login_required
 from app.models import db, Category
 
 category_bp = Blueprint(
@@ -9,6 +10,7 @@ columns = ["Nome", "Descrição", "Visualizar"]
 
 
 @category_bp.route("/admin/category/", methods=["GET"])
+@login_required
 def index():
     categories = Category.query.all()
 
@@ -22,6 +24,7 @@ def index():
 
 
 @category_bp.route("/admin/category/new", methods=["GET"])
+@login_required
 def category_form():
     return render_template(
         "category_form.j2",
@@ -32,6 +35,7 @@ def category_form():
 
 
 @category_bp.route("/admin/category", methods=["POST"])
+@login_required
 def create_category():
     form = request.form
 
@@ -48,6 +52,7 @@ def create_category():
 
 
 @category_bp.route("/admin/category/<int:id>", methods=["GET"])
+@login_required
 def category_view(id: int):
     category = Category.query.get(id)
 
@@ -60,6 +65,7 @@ def category_view(id: int):
 
 
 @category_bp.route("/admin/category/<int:id>", methods=["DELETE"])
+@login_required
 def delete_category(id: int):
     category = Category.query.get(id)
 
@@ -71,6 +77,7 @@ def delete_category(id: int):
 
 
 @category_bp.route("/admin/category/<int:id>", methods=["POST"])
+@login_required
 def update_category(id: int):
     form = request.form
 

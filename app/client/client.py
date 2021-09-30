@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask_login.utils import login_required
 from app.models import db, Client
 
 client_bp = Blueprint(
@@ -9,6 +10,7 @@ columns = ["Nome", "Telefone", "CPF", "Visualizar"]
 
 
 @client_bp.route("/admin/client/", methods=["GET"])
+@login_required
 def index():
     clients = Client.query.all()
 
@@ -22,6 +24,7 @@ def index():
 
 
 @client_bp.route("/admin/client/new", methods=["GET"])
+@login_required
 def client_form():
     return render_template(
         "client_form.j2",
@@ -32,6 +35,7 @@ def client_form():
 
 
 @client_bp.route("/admin/client", methods=["POST"])
+@login_required
 def create_client():
     form = request.form
 
@@ -52,6 +56,7 @@ def create_client():
 
 
 @client_bp.route("/admin/client/<int:id>", methods=["GET"])
+@login_required
 def client_view(id: int):
     client = Client.query.get(id)
 
@@ -64,6 +69,7 @@ def client_view(id: int):
 
 
 @client_bp.route("/admin/client/<int:id>", methods=["DELETE"])
+@login_required
 def delete_client(id: int):
     client = Client.query.get(id)
 
@@ -75,6 +81,7 @@ def delete_client(id: int):
 
 
 @client_bp.route("/admin/client/<int:id>", methods=["POST"])
+@login_required
 def update_client(id: int):
     form = request.form
 

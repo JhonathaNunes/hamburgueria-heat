@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask_login.utils import login_required
 from app.models import Category, db, Product
 
 product_dp = Blueprint(
@@ -9,6 +10,7 @@ columns = ["Nome", "Quantidade", "Preço", "Categoria", "Vizualizar"]
 
 
 @product_dp.route("/admin/product/", methods=["GET"])
+@login_required
 def index():
     products = Product.query.all()
 
@@ -22,6 +24,7 @@ def index():
 
 
 @product_dp.route("/admin/product/new", methods=["GET"])
+@login_required
 def product_form():
     categories = Category.query.all()
 
@@ -35,6 +38,7 @@ def product_form():
 
 
 @product_dp.route("/admin/product", methods=["POST"])
+@login_required
 def create_product():
     form = request.form
 
@@ -54,6 +58,7 @@ def create_product():
 
 
 @product_dp.route("/admin/product/<int:id>", methods=["GET"])
+@login_required
 def product_view(id: int):
     product = Product.query.get(id)
     categories = Category.query.all()
@@ -68,6 +73,7 @@ def product_view(id: int):
 
 
 @product_dp.route("/admin/product/<int:id>", methods=["DELETE"])
+@login_required
 def delete_product(id: int):
     product = Product.query.get(id)
 
@@ -79,6 +85,7 @@ def delete_product(id: int):
 
 
 @product_dp.route("/admin/product/<int:id>", methods=["POST"])
+@login_required
 def update_product(id: int):
     form = request.form
 

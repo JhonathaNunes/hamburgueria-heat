@@ -27,7 +27,9 @@ def init_app():
         app.register_blueprint(product.product_dp)
 
         login_manager = LoginManager()
-        login_manager.login_view = 'login.login'
+        login_manager.login_message = '''É preciso estar logado para acessar
+             essa página!'''
+        login_manager.login_view = 'login.render_login'
         login_manager.init_app(app)
 
         @login_manager.user_loader
