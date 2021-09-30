@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login.utils import login_user
 from werkzeug.security import check_password_hash
 from app.models import User
+from flask_login import current_user
 
 login_bp = Blueprint(
     "login", __name__, template_folder="templates"
@@ -10,6 +11,9 @@ login_bp = Blueprint(
 
 @login_bp.route("/login/", methods=["GET"])
 def render_login():
+    if current_user.is_authenticated:
+        return redirect(url_for('admin.index'))
+
     return render_template("login.j2")
 
 
