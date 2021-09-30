@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, flash, url_for
 from werkzeug.utils import redirect
 from app.models import db, Client
-from app.email.mailer import Mailer
 
 client_bp = Blueprint(
     "client", __name__, template_folder="templates", static_folder="static"
@@ -46,9 +45,6 @@ def create_client():
     client.number = form["number"]
     client.district = form["district"]
     client.email = form["email"]
-
-    email = Mailer("new_client", "🍔⭐️ Novo cliente ⭐️🍔")
-    email.send_email(client)
 
     db.session.add(client)
     db.session.commit()
