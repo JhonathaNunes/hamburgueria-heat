@@ -41,17 +41,17 @@ END = ConversationHandler.END
 
 def start(update: Update, context: CallbackContext):
     welcome_text = (
-        "Bem-vindo a Hamburgueria Heat, selecione uma das opções abaixo"
+        'Bem-vindo a Hamburgueria Heat, selecione uma das opções abaixo'
     )
 
     buttons = [
         [
             InlineKeyboardButton(
-                text="Visualizar cardápio",
+                text='Visualizar cardápio',
                 callback_data=str(LOOKING_MENU)
             ),
             InlineKeyboardButton(
-                text="Acessar plataforma",
+                text='Acessar plataforma',
                 callback_data=str(ACCESS_PLATFORM)
             )
         ]
@@ -76,7 +76,7 @@ def start(update: Update, context: CallbackContext):
 
 
 def show_menu(update: Update, context: CallbackContext):
-    menu = "*****MENU*****\n"
+    menu = '*****MENU*****\n'
 
     with engine.connect() as con:
         products = con.execute('SELECT name, price, description FROM products')
@@ -84,8 +84,8 @@ def show_menu(update: Update, context: CallbackContext):
         for p in products:
             (name, price, description) = p
             menu += (
-                f"{name} ... R$ {locale.format('%.2f', price)}"
-                f"\n{description}\n"
+                f'{name} ... R$ {locale.format("%.2f", price)}'
+                f'\n{description}\n'
             )
 
     buttons = [[InlineKeyboardButton(text='Voltar', callback_data=str(END))]]
@@ -104,7 +104,7 @@ def show_platform(update: Update, context: CallbackContext) -> None:
 
     update.callback_query.answer()
     update.callback_query.edit_message_text(
-        text="Acesse nossa plataforma em http://localhost:5000",
+        text='Acesse nossa plataforma em http://localhost:5000',
         reply_markup=keyboard
     )
 
@@ -117,7 +117,7 @@ def echo_reverse(update: Update, context: CallbackContext) -> None:
 
 
 def stop(update: Update, context: CallbackContext) -> int:
-    """End Conversation by command."""
+    '''End Conversation by command.'''
     update.message.reply_text('Até a próxima!')
 
     return END
