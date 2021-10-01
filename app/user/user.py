@@ -4,6 +4,7 @@ from app.models import db, User, UserRole, Role
 from werkzeug.security import generate_password_hash
 from app.email.mailer import send_mail
 from config import Config
+import threading
 
 user_bp = Blueprint(
     "user", __name__, template_folder="templates", static_folder="static"
@@ -46,7 +47,17 @@ def create_user():
     user.password = generate_password_hash(form["password"])
     user.email = form["email"]
 
-    send_mail(Config.EMAIL_USER, user.email, "🍔🔥 Novo usuário 🔥🍔", "new_user", entity=user, path_document=['C:\\Users\\lucas\\Desktop\\Lucas\\Faculdade\\teste.txt'])
+    params_email = {
+        "text_type": "html",
+        "sender": Config.EMAIL_USER,
+        "to": user.email,
+        "subject": "🍔🔥 Novo usuário 🔥🍔",
+        "template": "new_user",
+        "entity": user,
+        "path_document": ['C:\\Users\\lucas\\Desktop\\Lucas\\Faculdade\\teste.txt']
+    }
+    th = threading.Thread(target=send_mail, args=[params_email])
+    th.start()
 
     db.session.add(user)
     db.session.flush()

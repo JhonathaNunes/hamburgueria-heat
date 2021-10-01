@@ -3,17 +3,30 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 from config import Config
-from flask import render_template
 import smtplib
+import jinja2
 
-def send_mail(sender, to, subject, template, textType='html', **params):
+#https://stackoverflow.com/questions/17206728/attributeerror-nonetype-object-has-no-attribute-app
+def render_without_request(template_name, **template_vars):
+    env = jinja2.Environment(
+        loader=jinja2.PackageLoader('app','templates')
+    )
+    template = env.get_template(template_name)
+    return template.render(**template_vars)
+
+def send_mail(params: dict):
+    # Parâmetros obrigatórios
+    sender = params.get("sender")
+    to = params.get("to")
+    subject = params.get("subject")
+    template = params.get("template")
+    text_type = params.get("text_type")
+
     # Parâmetros opcionais
     cc = params.get("cc", [])
     bcc = params.get("bcc", [])
     entity = params.get("entity", {})
     path_document = params.get("path_document", [])
-    print(params.values)
-    print(entity)
 
     # Prepara a mensagem a ser enviada
     msg = MIMEMultipart()
@@ -25,8 +38,8 @@ def send_mail(sender, to, subject, template, textType='html', **params):
     if len(path_document): attach_documents(msg, path_document) # Anexa documentos
 
     # Renderiza o html do email baseado em um template
-    corpo = render_template( f"{template}.j2", entity=entity)
-    msg.attach(MIMEText(corpo, textType))
+    corpo = render_without_request( f"{template}.j2", entity=entity) # tive que fazer isso porque a thread de segundo plano está fora do ciclo de solicitação do Flask, e por isso não tem acesso a um contexto de solicitação.
+    msg.attach(MIMEText(corpo, text_type))
 
     # Conexão SMTP ao server e envio de mensagem
     server = smtplib.SMTP(Config.EMAIL_HOST, Config.EMAIL_PORT) # Instância e encapsula uma conexão SMTP
