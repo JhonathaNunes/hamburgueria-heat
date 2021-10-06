@@ -52,7 +52,7 @@
         </div>
         {% if product.photo_url %}
         <div>
-            <img src="{{product.photo_url}}" alt="{{product.name}}">
+            <img src="{{ url_for('product.download_file', file_id=product.photo_url) }}" alt="{{product.name}}">
         </div>
         {% endif %}
         <div class="form-group">

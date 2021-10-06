@@ -1,8 +1,9 @@
 from os import path
 from uuid import uuid1
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask import Blueprint, render_template, request, flash, url_for, redirect, send_from_directory
 from flask_login.utils import login_required
 from app.models import Category, db, Product
+from werkzeug import exceptions
 
 product_dp = Blueprint(
     'product', __name__, template_folder='templates', static_folder='static'
@@ -19,7 +20,6 @@ def get_extension(filename: str) -> str:
 
 
 def save_file_upload() -> str:
-    print(request.files)
     if "file" not in request.files:
         return None
 
@@ -29,9 +29,19 @@ def save_file_upload() -> str:
     if ext in ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp']:
         u = uuid1()
         filename = f"{u}.{ext}"
-        file.save(path.join("product_pic", filename))
+        file.save(path.join('product_pic', filename))
 
         return filename
+
+
+@product_dp.route('/admin/product/file/<file_id>')
+@login_required
+def download_file(file_id):
+    print(file_id)
+    try:
+        return send_from_directory('product_pic', file_id)
+    except exceptions.NotFound:
+        return send_from_directory('static/images', 'no-photo.png')
 
 
 @product_dp.route('/admin/product/', methods=['GET'])
