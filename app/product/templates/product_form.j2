@@ -23,7 +23,7 @@
 {% block content %}
 <h2 class="page-title">{{title}}</h2>
 <div class="d-flex justify-content-center align-items-center">
-    <form class="form-style card" method="POST" action="{{action}}">
+    <form class="form-style card" method="POST" action="{{action}}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">Nome</label>
             <input type="text" id="name" name="name" class="form-control" required value="{{product.name}}"/>
@@ -46,6 +46,15 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="mb-3">
+            <label for="photo" class="form-label">Imagem</label>
+            <input class="form-control" type="file" id="photo" name="photo">
+        </div>
+        {% if product.photo_url %}
+        <div>
+            <img src="{{product.photo_url}}" alt="{{product.name}}">
+        </div>
+        {% endif %}
         <div class="form-group">
             <label for="description">Descrição</label>
             <textarea class="form-control" id="description" name="description" rows="3" required>{{product.description}}</textarea>

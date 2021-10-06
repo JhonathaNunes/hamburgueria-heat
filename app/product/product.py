@@ -1,3 +1,5 @@
+from os import path
+from uuid import uuid1
 from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login.utils import login_required
 from app.models import Category, db, Product
@@ -7,6 +9,29 @@ product_dp = Blueprint(
 )
 
 columns = ['Nome', 'Quantidade', 'Preço', 'Categoria', 'Vizualizar']
+
+
+def get_extension(filename: str) -> str:
+    if '.' not in filename:
+        return ''
+
+    return filename.rsplit('.', 1)[1].lower()
+
+
+def save_file_upload() -> str:
+    print(request.files)
+    if "file" not in request.files:
+        return None
+
+    file = request.files["file"]
+    ext = get_extension(file.filename)
+
+    if ext in ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp']:
+        u = uuid1()
+        filename = f"{u}.{ext}"
+        file.save(path.join("product_pic", filename))
+
+        return filename
 
 
 @product_dp.route('/admin/product/', methods=['GET'])
@@ -49,6 +74,7 @@ def create_product():
     product.quantity = int(form['quantity'])
     product.price = float(form['price'])
     product.category_id = int(form['category'])
+    product.photo_url = save_file_upload()
 
     db.session.add(product)
     db.session.commit()
