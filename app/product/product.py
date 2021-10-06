@@ -1,6 +1,14 @@
 from os import path
 from uuid import uuid1
-from flask import Blueprint, render_template, request, flash, url_for, redirect, send_from_directory
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    flash,
+    url_for,
+    redirect,
+    send_from_directory
+)
 from flask_login.utils import login_required
 from app.models import Category, db, Product
 from werkzeug import exceptions
