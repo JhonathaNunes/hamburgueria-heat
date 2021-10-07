@@ -1,4 +1,4 @@
-from os import path
+from os import path, getcwd
 from uuid import uuid1
 from flask import (
     Blueprint,
@@ -45,9 +45,10 @@ def save_file_upload() -> str:
 @product_dp.route('/admin/product/file/<file_id>')
 @login_required
 def download_file(file_id):
-    print(file_id)
+    project_path = path.abspath(getcwd())
+
     try:
-        return send_from_directory('product_pic', file_id)
+        return send_from_directory(f'{project_path}/product_pic', file_id)
     except exceptions.NotFound:
         return send_from_directory('static/images', 'no-photo.png')
 
