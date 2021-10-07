@@ -110,7 +110,7 @@ def product_view(id: int):
 
     return render_template(
         'product_form.j2',
-        title='Novo produto',
+        title='Editar produto',
         action=f'/admin/product/{id}',
         categories=categories,
         product=product
