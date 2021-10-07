@@ -2,6 +2,12 @@
 {% if product %}
     {% block aditional_header %}
     <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            if (!document.getElementById('img-preview').src) {
+                document.getElementById('preview-container').style.display = "none";
+            }
+        });
+
         function deleteProduct() {
             if (!confirm("Você tem certeza?")) return;
             xhr = new XMLHttpRequest();
@@ -16,6 +22,15 @@
                 }
             };
             xhr.send();
+        }
+
+        function createURL(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('img-preview').src = URL.createObjectURL(input.files[0]);
+                document.getElementById('preview-container').style.display = "block";
+            } else {
+                document.getElementById('preview-container').style.display = "none";
+            }
         }
     </script>
     {% endblock %}
@@ -47,14 +62,16 @@
             </select>
         </div>
         <div class="mb-3">
-            <label for="file" class="form-label">Imagem</label>
-            <input class="form-control" type="file" id="file" name="file">
+            <label for="fileInput" class="form-label">Imagem</label>
+            <input class="form-control" type="file" id="fileInput" name="file" onchange="createURL(this)">
         </div>
-        {% if product.photo_url %}
-        <div>
-            <img src="{{ url_for('product.download_file', file_id=product.photo_url) }}" alt="{{product.name}}">
+        <div id="preview-container" class="image-preview-container">
+            {% if product.photo_url %}
+                <img id="img-preview" src="{{ url_for('product.download_file', file_id=product.photo_url) }}" class="image-preview" alt="{{product.name}}">
+            {% else %}
+                <img id="img-preview" class="image-preview" alt="preview">
+            {% endif %}
         </div>
-        {% endif %}
         <div class="form-group">
             <label for="description">Descrição</label>
             <textarea class="form-control" id="description" name="description" rows="3" required>{{product.description}}</textarea>

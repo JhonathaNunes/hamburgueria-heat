@@ -122,3 +122,13 @@ h1, h2, h3, h4, h5 {
 .logout-profile-container a:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+
+.image-preview-container {
+    width: fit-content;
+    margin: auto;
+}
+
+.image-preview {
+    height: 300px;
+    width: auto;
+}
