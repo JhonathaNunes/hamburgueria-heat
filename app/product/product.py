@@ -147,6 +147,8 @@ def update_product(id: int):
 
     product = Product.query.get(id)
 
+    old_product_photo = product.photo_url
+
     product.name = form['name']
     product.description = form['description']
     product.price = float(form['price'])
@@ -154,6 +156,9 @@ def update_product(id: int):
     product.photo_url = save_file_upload()
 
     db.session.commit()
+
+    if "file" in request.files and old_product_photo:
+        delete_file(old_product_photo)
 
     flash('Produto atualizado com sucesso')
     return redirect(url_for('product.index'))
