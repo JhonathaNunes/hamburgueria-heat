@@ -83,3 +83,52 @@ h1, h2, h3, h4, h5 {
 .form-group {
     margin-bottom: 16px;
 }
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-logo {
+    width: 200px;
+    margin: auto;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    justify-content: space-between;
+}
+
+.button-margin {
+    margin: 25px 0;
+}
+
+.logout-profile-container {
+    color: #E2E2E2;
+}
+
+.logout-profile-container a {
+    padding: 10px;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+
+.logout-profile-container a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.image-preview-container {
+    width: fit-content;
+    margin: auto;
+}
+
+.image-preview {
+    height: 300px;
+    width: auto;
+}

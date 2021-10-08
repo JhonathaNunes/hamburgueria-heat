@@ -2,6 +2,12 @@
 {% if product %}
     {% block aditional_header %}
     <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            if (!document.getElementById('img-preview').src) {
+                document.getElementById('preview-container').style.display = "none";
+            }
+        });
+
         function deleteProduct() {
             if (!confirm("Você tem certeza?")) return;
             xhr = new XMLHttpRequest();
@@ -17,13 +23,22 @@
             };
             xhr.send();
         }
+
+        function createURL(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('img-preview').src = URL.createObjectURL(input.files[0]);
+                document.getElementById('preview-container').style.display = "block";
+            } else {
+                document.getElementById('preview-container').style.display = "none";
+            }
+        }
     </script>
     {% endblock %}
 {% endif %}
 {% block content %}
 <h2 class="page-title">{{title}}</h2>
 <div class="d-flex justify-content-center align-items-center">
-    <form class="form-style card" method="POST" action="{{action}}">
+    <form class="form-style card" method="POST" action="{{action}}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">Nome</label>
             <input type="text" id="name" name="name" class="form-control" required value="{{product.name}}"/>
@@ -45,6 +60,17 @@
                 </option>
                 {% endfor %}
             </select>
+        </div>
+        <div class="mb-3">
+            <label for="fileInput" class="form-label">Imagem</label>
+            <input class="form-control" type="file" id="fileInput" name="file" onchange="createURL(this)">
+        </div>
+        <div id="preview-container" class="image-preview-container">
+            {% if product.photo_url %}
+                <img id="img-preview" src="{{ url_for('product.download_file', file_id=product.photo_url) }}" class="image-preview" alt="{{product.name}}">
+            {% else %}
+                <img id="img-preview" class="image-preview" alt="preview">
+            {% endif %}
         </div>
         <div class="form-group">
             <label for="description">Descrição</label>

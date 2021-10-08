@@ -1,11 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy, Model
 import sqlalchemy as sa
 from datetime import datetime
-'''
-from werkzeug.security import generate_password_hash
-e para deshashegar você usa o
-check_password_hash
-'''
+from flask_login import UserMixin
 
 
 class IdModel(Model):
@@ -57,7 +53,7 @@ class Role(db.Model):
     description = db.Column(db.Text, nullable=False)
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
     name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(20), nullable=False)

@@ -40,6 +40,10 @@
                         </li>
                     </ul>
                 </div>
+                <div class="logout-profile-container">
+                    {{current_user.name}}
+                    <a href="{{url_for('login.logout')}}"><img src="/static/images/logout_white_24dp.svg"/></a>
+                </div>
             </div>
         </nav>
     </header>

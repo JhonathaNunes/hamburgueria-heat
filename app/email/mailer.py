@@ -16,17 +16,17 @@ def render_without_request(template_name, **template_vars):
 
 def send_mail(params: dict):
     # Parâmetros obrigatórios
-    sender = params.get("sender")
-    to = params.get("to")
-    subject = params.get("subject")
-    template = params.get("template")
-    text_type = params.get("text_type")
+    sender = params.get('sender')
+    to = params.get('to')
+    subject = params.get('subject')
+    template = params.get('template')
+    text_type = params.get('text_type')
 
     # Parâmetros opcionais
-    cc = params.get("cc", [])
-    bcc = params.get("bcc", [])
-    entity = params.get("entity", {})
-    path_document = params.get("path_document", [])
+    cc = params.get('cc', [])
+    bcc = params.get('bcc', [])
+    entity = params.get('entity', {})
+    path_document = params.get('path_document', [])
 
     # Prepara a mensagem a ser enviada
     msg = MIMEMultipart()
@@ -38,7 +38,7 @@ def send_mail(params: dict):
     if len(path_document): attach_documents(msg, path_document) # Anexa documentos
 
     # Renderiza o html do email baseado em um template
-    corpo = render_without_request( f"{template}.j2", entity=entity) # tive que fazer isso porque a thread de segundo plano está fora do ciclo de solicitação do Flask, e por isso não tem acesso a um contexto de solicitação.
+    corpo = render_without_request( f'{template}.j2', entity=entity) # tive que fazer isso porque a thread de segundo plano está fora do ciclo de solicitação do Flask, e por isso não tem acesso a um contexto de solicitação.
     msg.attach(MIMEText(corpo, text_type))
 
     # Conexão SMTP ao server e envio de mensagem
@@ -51,7 +51,7 @@ def send_mail(params: dict):
 
 def attach_documents(msg, paths):
     for path in paths:
-        attachment = open(path, 'rb') # ex: path: "C:\\Users\\lucas\\Desktop\\Lucas\\Faculdade\\teste.txt" / read_binary
+        attachment = open(path, 'rb') # ex: path: 'C:\\Users\\lucas\\Desktop\\Lucas\\Faculdade\\teste.txt' / read_binary
 
         # Lê o arquivo no modo binário, codifica o arquivo em base 64 (protocolo do e-mail)
         att = MIMEBase('application', 'octet-stream')
