@@ -1,12 +1,65 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from os import path, getcwd, remove
+from uuid import uuid1
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    flash,
+    url_for,
+    redirect,
+    send_from_directory
+)
 from flask_login.utils import login_required
 from app.models import Category, db, Product
+from werkzeug import exceptions
 
 product_dp = Blueprint(
     'product', __name__, template_folder='templates', static_folder='static'
 )
 
 columns = ['Nome', 'Quantidade', 'Preço', 'Categoria', 'Vizualizar']
+
+
+def get_extension(filename: str) -> str:
+    if '.' not in filename:
+        return ''
+
+    return filename.rsplit('.', 1)[1].lower()
+
+
+def save_file_upload() -> str:
+    if "file" not in request.files:
+        return None
+
+    file = request.files["file"]
+    ext = get_extension(file.filename)
+
+    if ext in ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp']:
+        u = uuid1()
+        filename = f"{u}.{ext}"
+        file.save(path.join('product_pic', filename))
+
+        return filename
+
+
+def delete_file(file_id):
+    if not file_id:
+        return
+
+    file_path = path.join('product_pic', file_id)
+    if path.exists(file_path):
+        remove(file_path)
+
+
+@product_dp.route('/admin/product/file/<file_id>')
+@login_required
+def download_file(file_id):
+    project_path = path.abspath(getcwd())
+
+    try:
+        return send_from_directory(f'{project_path}/product_pic', file_id)
+    except exceptions.NotFound:
+        return send_from_directory('static/images', 'no-photo.png')
 
 
 @product_dp.route('/admin/product/', methods=['GET'])
@@ -49,6 +102,7 @@ def create_product():
     product.quantity = int(form['quantity'])
     product.price = float(form['price'])
     product.category_id = int(form['category'])
+    product.photo_url = save_file_upload()
 
     db.session.add(product)
     db.session.commit()
@@ -65,7 +119,7 @@ def product_view(id: int):
 
     return render_template(
         'product_form.j2',
-        title='Novo produto',
+        title='Editar produto',
         action=f'/admin/product/{id}',
         categories=categories,
         product=product
@@ -80,6 +134,8 @@ def delete_product(id: int):
     db.session.delete(product)
     db.session.commit()
 
+    delete_file(product.photo_url)
+
     flash('Produto deletado com sucesso')
     return {}
 
@@ -91,13 +147,18 @@ def update_product(id: int):
 
     product = Product.query.get(id)
 
+    old_product_photo = product.photo_url
+
     product.name = form['name']
     product.description = form['description']
-    product.quantity = int(form['quantity'])
     product.price = float(form['price'])
     product.category_id = int(form['category'])
+    product.photo_url = save_file_upload()
 
     db.session.commit()
+
+    if "file" in request.files and old_product_photo:
+        delete_file(old_product_photo)
 
     flash('Produto atualizado com sucesso')
     return redirect(url_for('product.index'))
