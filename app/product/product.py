@@ -1,4 +1,4 @@
-from os import path, getcwd
+from os import path, getcwd, remove
 from uuid import uuid1
 from flask import (
     Blueprint,
@@ -40,6 +40,15 @@ def save_file_upload() -> str:
         file.save(path.join('product_pic', filename))
 
         return filename
+
+
+def delete_file(file_id):
+    if not file_id:
+        return
+
+    file_path = path.join('product_pic', file_id)
+    if path.exists(file_path):
+        remove(file_path)
 
 
 @product_dp.route('/admin/product/file/<file_id>')
@@ -125,6 +134,8 @@ def delete_product(id: int):
     db.session.delete(product)
     db.session.commit()
 
+    delete_file(product.photo_url)
+
     flash('Produto deletado com sucesso')
     return {}
 
@@ -138,9 +149,9 @@ def update_product(id: int):
 
     product.name = form['name']
     product.description = form['description']
-    product.quantity = int(form['quantity'])
     product.price = float(form['price'])
     product.category_id = int(form['category'])
+    product.photo_url = save_file_upload()
 
     db.session.commit()
 
