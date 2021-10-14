@@ -57,10 +57,11 @@ def create_user():
         'text_type': 'html',
         'sender': Config.EMAIL_USER,
         'to': user.email,
-        'subject': '🍔🔥 Novo usuário 🔥🍔',
+        'subject': '🍔🔥 Sucesso! Seja bem vindo(a) a Hamburgueria Heat! 🔥🍔',
         'template': 'new_user',
         'entity': user,
-        'path_document': [f'{project_path}/teste.txt']
+        'path_document': [f'{project_path}/teste.txt'],
+        'images': ['logo.png']
     }
     th = threading.Thread(target=send_mail, args=[params_email])
     th.start()
