@@ -17,6 +17,12 @@
             };
             xhr.send();
         }
+
+        function apenasCaracteres(elemt){
+            let regex = /[^A-Za-z ?à-ú?À-Ú']/g;
+            elemt.value = elemt.value.replaceAll(regex, "");
+        }
+
     </script>
     {% endblock %}
 {% endif %}
@@ -26,11 +32,11 @@
     <form class="form-style card" method="POST" action="{{action}}">
         <div class="form-group">
             <label for="name">Nome</label>
-            <input type="text" id="name" name="name" class="form-control" required value="{{category.name}}"/>
+            <input type="text" id="name" name="name" pattern="[A-Za-z ?à-ú?À-Ú']{3,255}" onkeyup="apenasCaracteres(this)" onchange="apenasCaracteres(this)" class="form-control" required value="{{category.name}}"/>
         </div>
         <div class="form-group">
             <label for="description">Descrição</label>
-            <textarea class="form-control" id="description" name="description" rows="3" required>{{category.description}}</textarea>
+            <textarea class="form-control" id="description" name="description" rows="3" maxlength="255" required>{{category.description}}</textarea>
         </div>
         <div class="form-group d-flex justify-content-between">
             <button type="button" class="btn button-outlined" onClick="history.back()">Cancelar</button>
