@@ -75,6 +75,8 @@ class Order(db.Model):
     )
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User')
+    note = db.Column(db.Text)
+    products = db.relationship('OrderProduct', back_populates='order')
     created_at = db.Column(
         db.DateTime,
         nullable=False,
@@ -89,7 +91,8 @@ class Order(db.Model):
 
 
 class OrderProduct(db.Model):
+    __tablename__ = 'order_products'
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
+    products = db.relationship('Product')
     quantity = db.Column(db.Integer)
-    note = db.Column(db.Text)
