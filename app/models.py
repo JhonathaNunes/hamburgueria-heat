@@ -49,6 +49,7 @@ class Role(db.Model):
     __tablename__ = 'roles'
     code = db.Column(db.String(15), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    users = db.relationship('User', backref='role')
 
 
 class User(UserMixin, db.Model):
@@ -56,12 +57,7 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-
-
-class UserRole(db.Model):
-    __tablename__ = 'user_roles'
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
 
 class Order(db.Model):
