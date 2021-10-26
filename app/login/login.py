@@ -26,14 +26,10 @@ def login():
         'response': request.form.get('g-recaptcha-response')
     }
 
-    print(payload)
-
     response = api.post(
         'https://www.google.com/recaptcha/api/siteverify',
         params=payload
     )
-
-    print(response.json())
 
     if response.status_code == 200 and not response.json()['success']:
         flash('Preencha o reCaptcha')
