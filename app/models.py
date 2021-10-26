@@ -76,7 +76,7 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User')
     note = db.Column(db.Text)
-    products = db.relationship('OrderProduct', back_populates='order')
+    products = db.relationship('OrderProduct', backref='order')
     created_at = db.Column(
         db.DateTime,
         nullable=False,
