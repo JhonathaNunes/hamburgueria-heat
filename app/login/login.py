@@ -3,6 +3,8 @@ from flask_login.utils import login_required, login_user, logout_user
 from werkzeug.security import check_password_hash
 from app.models import User
 from flask_login import current_user
+from requests import api
+from config import Config
 
 login_bp = Blueprint(
     'login', __name__, template_folder='templates'
@@ -14,11 +16,29 @@ def render_login():
     if current_user.is_authenticated:
         return redirect(url_for('admin.index'))
 
-    return render_template('login.j2')
+    return render_template('login.j2', recaptcha=Config.RECAPTCHA_SITE_KEY)
 
 
 @login_bp.route('/login/', methods=['POST'])
 def login():
+    payload = {
+        'secret': Config.RECAPTCHA_VALIDATION_KEY,
+        'response': request.form.get('g-recaptcha-response')
+    }
+
+    print(payload)
+
+    response = api.post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        params=payload
+    )
+
+    print(response.json())
+
+    if response.status_code == 200 and not response.json()['success']:
+        flash('Preencha o reCaptcha')
+        return redirect(url_for('login.render_login'))
+
     username = request.form.get('username')
     password = request.form.get('password')
 
