@@ -54,7 +54,7 @@
                     id="adm"
                     name="role"
                     value="A"
-                    {% if role is defined and role.code == 'A' %} checked {% endif %}
+                    {% if user.role.code == 'A' %} checked {% endif %}
                 >
                 <label class="form-check-label" for="adm">
                     Administrador
@@ -67,7 +67,7 @@
                     id="usr"
                     name="role"
                     value="U"
-                    {% if role is defined and role.code == 'U' %} checked {% endif %}
+                    {% if user.role.code == 'U' %} checked {% endif %}
                 >
                 <label class="form-check-label" for="usr">
                         Usuário Comum

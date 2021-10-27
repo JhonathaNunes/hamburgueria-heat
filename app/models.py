@@ -22,7 +22,7 @@ class Client(db.Model):
     number = db.Column(db.String(6), nullable=False)
     district = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(255), nullable=False)
-    orders = db.relationship('Order', backref='clients', lazy='dynamic')
+    orders = db.relationship('Order', backref='clients')
 
 
 class Status(db.Model):
@@ -35,7 +35,7 @@ class Category(db.Model):
     __tablename__ = 'categories'
     name = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    products = db.relationship('Product', backref='categories', lazy='dynamic')
+    products = db.relationship('Product', backref='category')
 
 
 class Product(db.Model):
@@ -46,13 +46,13 @@ class Product(db.Model):
     quantity = db.Column(db.Integer)
     price = db.Column(db.Float(precision='7,2'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-    category = db.relationship('Category')
 
 
 class Role(db.Model):
     __tablename__ = 'roles'
     code = db.Column(db.String(15), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    users = db.relationship('User', backref='role')
 
 
 class User(UserMixin, db.Model):
@@ -81,7 +81,7 @@ class UserRole(db.Model):
     __tablename__ = 'user_roles'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User')
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     role = db.relationship('Role')
 
 
@@ -98,9 +98,10 @@ class Order(db.Model):
         db.ForeignKey('clients.id'),
         nullable=False
     )
-    client = db.relationship('Client')
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User')
+    note = db.Column(db.Text)
+    products = db.relationship('OrderProduct', backref='order')
     created_at = db.Column(
         db.DateTime,
         nullable=False,
@@ -115,7 +116,8 @@ class Order(db.Model):
 
 
 class OrderProduct(db.Model):
+    __tablename__ = 'order_products'
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
+    products = db.relationship('Product')
     quantity = db.Column(db.Integer)
-    note = db.Column(db.Text)

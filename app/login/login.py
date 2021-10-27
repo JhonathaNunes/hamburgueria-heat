@@ -6,6 +6,8 @@ from flask_login import current_user
 from app.email.mailer import send_mail
 from config import Config
 import threading
+from requests import api
+from config import Config
 
 login_bp = Blueprint(
     'login', __name__, template_folder='templates'
@@ -17,11 +19,25 @@ def render_login():
     if current_user.is_authenticated:
         return redirect(url_for('admin.index'))
 
-    return render_template('login.j2')
+    return render_template('login.j2', recaptcha=Config.RECAPTCHA_SITE_KEY)
 
 
 @login_bp.route('/login/', methods=['POST'])
 def login():
+    payload = {
+        'secret': Config.RECAPTCHA_VALIDATION_KEY,
+        'response': request.form.get('g-recaptcha-response')
+    }
+
+    response = api.post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        params=payload
+    )
+
+    if response.status_code == 200 and not response.json()['success']:
+        flash('Preencha o reCaptcha')
+        return redirect(url_for('login.render_login'))
+
     username = request.form.get('username')
     password = request.form.get('password')
 

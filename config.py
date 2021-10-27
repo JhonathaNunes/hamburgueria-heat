@@ -9,6 +9,8 @@ class Config:
     FLASK_ENV = environ.get('FLASK_ENV')
     FLASK_APP = environ.get('FLASK_APP')
     TELEGRAM_TOKEN = environ.get('TELEGRAM_TOKEN')
+    RECAPTCHA_SITE_KEY = environ.get('RECAPTCHA_SITE_KEY')
+    RECAPTCHA_VALIDATION_KEY = environ.get('RECAPTCHA_VALIDATION_KEY')
     __DB_USER = environ.get('DB_USER')
     __DB_PASSWORD = environ.get('DB_PASSWORD')
     __DB_HOST = environ.get('DB_HOST')
