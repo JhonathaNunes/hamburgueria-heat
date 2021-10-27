@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy, Model
 import sqlalchemy as sa
 from datetime import datetime
 from flask_login import UserMixin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from config import Config
 
 
 class IdModel(Model):
@@ -60,6 +62,19 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     user_roles = db.relationship('UserRole', backref='users', lazy=True)
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(Config.SECRET_KEY, expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(Config.SECRET_KEY)
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
 
 class UserRole(db.Model):

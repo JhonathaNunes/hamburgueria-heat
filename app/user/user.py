@@ -3,9 +3,9 @@ from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login.utils import login_required
 from app.models import db, User, UserRole, Role
 from werkzeug.security import generate_password_hash
-from app.email.mailer import send_mail
-from config import Config
-import threading
+# from app.email.mailer import send_mail
+# from config import Config
+# import threading
 
 user_bp = Blueprint(
     'user', __name__, template_folder='templates', static_folder='static'
@@ -51,20 +51,20 @@ def create_user():
     user.password = generate_password_hash(form['password'])
     user.email = form['email']
 
-    project_path = path.abspath(getcwd())
+    # project_path = path.abspath(getcwd())
 
-    params_email = {
-        'text_type': 'html',
-        'sender': Config.EMAIL_USER,
-        'to': user.email,
-        'subject': '🍔🔥 Sucesso! Seja bem vindo(a) a Hamburgueria Heat! 🔥🍔',
-        'template': 'new_user',
-        'entity': user,
-        'path_document': [f'{project_path}/teste.txt'],
-        'images': ['logo.png']
-    }
-    th = threading.Thread(target=send_mail, args=[params_email])
-    th.start()
+    # params_email = {
+    #     'text_type': 'html',
+    #     'sender': Config.EMAIL_USER,
+    #     'to': user.email,
+    #     'subject': ' Sucesso! Seja bem vindo(a) a Hamburgueria Heat! ',
+    #     'template': 'new_user',
+    #     'entity': user,
+    #     'path_document': [f'{project_path}/teste.txt'],
+    #     'images': ['logo.png']
+    # }
+    # th = threading.Thread(target=send_mail, args=[params_email])
+    # th.start()
 
     db.session.add(user)
     db.session.flush()
