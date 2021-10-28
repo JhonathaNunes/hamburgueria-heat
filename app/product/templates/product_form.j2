@@ -46,7 +46,7 @@
             elemt.value = elemt.value.replaceAll(regex, "");
         }
         
-        function apenasNumeros(){
+        function justNumbers(){
             let regex = /[^0-9]/g;
             elemt.value = elemt.value.replaceAll(regex, "");
         }
@@ -68,7 +68,7 @@
         </div>
         <div class="form-group">
             <label for="price">Preço</label>
-            <input type="text" id="price" name="price" class="form-control" pattern="[0-9,]{3,7}" maxlength="7" onkeyup="apenasNumeros(this)" onchange="apenasNumeros(this)" required value="{{product.price}}"/>
+            <input type="text" id="price" name="price" class="form-control" pattern="[0-9,]{3,7}" maxlength="7" onkeyup="justNumbers(this)" onchange="justNumbers(this)" required value="{{product.price}}"/>
         </div>
         <div class="form-group">
             <label for="category">Categoria</label>

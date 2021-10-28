@@ -17,33 +17,57 @@
             };
             xhr.send();
         }
+        
+        function saveCategory() {
+            let nameInput = $('#name');
+            let descriptionInput = $('#description');
+            let err = 0;
 
-        function apenasCaracteres(elemt){
-            let regex = /[^A-Za-z ?à-ú?À-Ú']/g;
-            elemt.value = elemt.value.replaceAll(regex, "");
+            if (!nameInput.val() || nameInput.val().length > 20) {
+                nameInput.addClass('invalid');
+                $('#name-invalid').show();
+                err++
+            }
+
+            if (!descriptionInput.val() || descriptionInput.val().length > 255) {
+                descriptionInput.addClass('invalid');
+                $('#descprition-invalid').show();
+                err++
+            }
+
+            if (err > 0) {
+                return false;
+            }
+
+            $('#form').submit()
         }
-
     </script>
     {% endblock %}
 {% endif %}
 {% block content %}
 <h2 class="page-title">{{title}}</h2>
 <div class="d-flex justify-content-center align-items-center">
-    <form class="form-style card" method="POST" action="{{action}}">
+    <form id="form" class="form-style card" method="POST" action="{{action}}" novalidate>
         <div class="form-group">
             <label for="name">Nome</label>
-            <input type="text" id="name" name="name" pattern="[A-Za-z ?à-ú?À-Ú']{3,255}" onkeyup="apenasCaracteres(this)" onchange="apenasCaracteres(this)" class="form-control" required value="{{category.name}}"/>
+            <input type="text" id="name" name="name" class="form-control" maxlength="20" required value="{{category.name}}"/>
+            <div id="name-invalid" class="invalid-field">
+                Preencha o nome da categoria
+            </div>
         </div>
         <div class="form-group">
             <label for="description">Descrição</label>
             <textarea class="form-control" id="description" name="description" rows="3" maxlength="255" required>{{category.description}}</textarea>
+            <div id="descprition-invalid" class="invalid-field">
+                Preencha a descrição da categoria
+            </div>
         </div>
         <div class="form-group d-flex justify-content-between">
-            <button type="button" class="btn button-outlined" onClick="history.back()">Cancelar</button>
+            <button type="button" class="btn button-outlined" onclick="history.back()">Cancelar</button>
             {% if category %}
-            <button type="button" class="btn button-outlined" onClick="deleteCategory()">Excluir</button>
+            <button type="button" class="btn button-outlined" onclick="deleteCategory()">Excluir</button>
             {% endif %}
-            <button type="submit" class="btn button-dark">Salvar</button>
+            <button type="button" class="btn button-dark" onclick="saveCategory()">Salvar</button>
         </div>
     </form>
 </div>
