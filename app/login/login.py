@@ -31,7 +31,7 @@ def login():
         params=payload
     )
 
-    if response.status_code == 200 and not response.json()['success']:
+    if not response.json()['success']:
         flash('Preencha o reCaptcha')
         return redirect(url_for('login.render_login'))
 
