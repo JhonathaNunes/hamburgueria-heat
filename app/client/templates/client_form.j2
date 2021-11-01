@@ -1,6 +1,8 @@
 {% extends "admin_base.j2" %}
 {% if category %}
     {% block aditional_header %}
+    <script src="/static/scripts/validators.js"></script>
+    <script src="/static/scripts/createMasks.js"></script>
     <script>
         function deleteClient() {
             if (!confirm("Você tem certeza?")) return;
@@ -15,47 +17,140 @@
                     alert('Erro ' + xhr.status);
                 }
             };
+
             xhr.send();
         }
+
+        function saveClient() {
+            let fullNameInput = $('#name');
+            let phoneInput = $('#phone');
+            let cpfInput = $('#cpf');
+            let cepInput = $('#cep');
+            let streetInput = $('#street');
+            let numberInput = $('#number');
+            let districtInput = $('#district');
+            let err = 0;
+
+            fullNameInput.removeClass('invalid');
+            phoneInput.removeClass('invalid');
+            cpfInput.removeClass('invalid');
+            cepInput.removeClass('invalid');
+            streetInput.removeClass('invalid');
+            numberInput.removeClass('invalid');
+            districtInput.removeClass('invalid');
+
+            $('#name-invalid, #phone-invalid, #cpf-invalid, #cep-invalid, #street-invalid, #number-invalid, #district-invalid').hide();
+
+            if (!fullNameInput.val() || fullNameInput.val().length > 255) {
+                fullNameInput.addClass('invalid');
+                $('#name-invalid').show();
+                err++;
+            }
+
+            if (!phoneInput.val() || !phoneIsValid(phoneInput.val())) {
+                phoneInput.addClass('invalid');
+                $('#phone-invalid').show();
+                err++;
+            }
+
+            if (!cpfInput.val() || !cpfIsValid(cpfInput.val())) {
+                cpfInput.addClass('invalid');
+                $('#cpf-invalid').show();
+                err++;
+            }
+
+            if (!cepInput.val() || cepIsValid(cepInput.val())) {
+                cepInput.addClass('invalid');
+                $('#cep-invalid').show();
+                err++;
+            }
+
+            if (!streetInput.val()) {
+                streetInput.addClass('invalid');
+                $('#street-invalid').show();
+                err++;
+            }
+
+            if (!numberInput.val() || numberAddressIsValid(numberInput.val())) {
+                numberInput.addClass('invalid');
+                $('#number-invalid').show();
+                err++;
+            }
+
+            if (!districtInput.val() || districtInput.val().length > 50) {
+                districtInput.addClass('invalid');
+                $('#district-invalid').show();
+                err++;
+            }
+
+            if (err > 0) {
+                return false;
+            }
+
+            $('#form').submit();
+        }
     </script>
-    <script src="/static/scripts/validators.js"></script>
     {% endblock %}
 {% endif %}
 {% block content %}
 <h2 class="page-title">{{title}}</h2>
 <div class="d-flex justify-content-center align-items-center">
-    <form class="form-style card" method="POST" action="{{action}}">
+    <form id="form" class="form-style card" method="POST" action="{{action}}" novalidate>
         <div class="form-group">
             <label for="full_name">Nome Completo</label>
-            <input type="text" id="full_name" name="full_name" pattern="[A-Za-zÀ-ú ?à-ú?À-Ú']{3,255}" onkeyup="apenasCaracteres(this)" onchange="apenasCaracteres(this)" class="form-control" required value="{{client.full_name}}"/>
+            <input type="text" id="name" name="full_name" maxlength="250" class="form-control" required value="{{client.full_name}}"/>
+            <div id="name-invalid" class="invalid-field">
+                Preencha o campo nome
+            </div>
         </div>
         <div class="form-group">
-            <label for="description">Telefone</label>
-            <input type="text" id="phone" name="phone" class="form-control" pattern="[0-9]{11}" onkeyup="justNumbers(this)" onchange="justNumbers(this)" required value="{{client.phone}}"/>
+            <label for="phone">Telefone</label>
+            <input type="text" id="phone" name="phone" class="form-control" maxlength="15" required value="{{client.phone}}"/>
+            <div id="phone-invalid" class="invalid-field">
+                Preencha com um telefone válido
+            </div>
         </div>
         <div class="form-group">
-            <label for="description">CPF</label>
-            <label class="CPFInvalido" style="color:white">CPF Inválido</label>
-            <input type="text" id="cpf" name="cpf" class="form-control" required value="{{client.cpf}}"/>
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" name="cpf" class="form-control" maxlength="14" required value="{{client.cpf}}"/>
+            <div id="cpf-invalid" class="invalid-field">
+                Preencha o campo CPF válido
+            </div>
         </div>
         <div class="form-group">
-            <label for="description">Rua</label>
-            <input type="text" id="street" name="street" pattern="[A-Za-zÀ-ú ?à-ú?À-Ú']{3,255}" onkeyup="apenasCaracteres(this)" onchange="apenasCaracteres(this)"  class="form-control" required value="{{client.street}}"/>
+            <label for="cep">CEP</label>
+            <input type="text" id="cep" name="cep" class="form-control" maxlength="9" required value="{{client.cep}}"/>
+            <div id="cep-invalid" class="invalid-field">
+                Preencha com um CEP válido
+            </div>
         </div>
         <div class="form-group">
-            <label for="description">Número</label>
-            <input type="text" id="number" name="number" onkeyup="justNumbers(this)" pattern="[0-9]{1,6}" onchange="justNumbers(this)"  class="form-control" required value="{{client.number}}"/>
+            <label for="street">Logradouro</label>
+            <input type="text" id="street" name="street" class="form-control" maxlength="250" required value="{{client.street}}"/>
+            <div id="street-invalid" class="invalid-field">
+                Preencha o campo logradouro
+            </div>
         </div>
         <div class="form-group">
-            <label for="description">Distrito</label>
-            <input type="text" id="district" name="district" class="form-control" pattern="[A-Za-zÀ-ú ?à-ú?À-Ú']{3,255}" onkeyup="apenasCaracteres(this)" onchange="apenasCaracteres(this)" required value="{{client.district}}"/>
+            <label for="number">Número</label>
+            <input type="text" id="number" name="number" maxlength="6" class="form-control" required value="{{client.number}}"/>
+            <div id="number-invalid" class="invalid-field">
+                Preencha o campo número
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="district">Bairro</label>
+            <input type="text" id="district" name="district" class="form-control" maxlength="50" required value="{{client.district}}"/>
+            <div id="district-invalid" class="invalid-field">
+                Preencha o campo bairro
+            </div>
         </div>
         <div class="form-group d-flex justify-content-between">
             <button type="button" class="btn button-outlined" onClick="history.back()">Cancelar</button>
             {% if client %}
             <button type="button" class="btn button-outlined" onClick="deleteClient()">Excluir</button>
             {% endif %}
-            <button type="submit" class="btn button-dark">Salvar</button>
+            <button type="button" class="btn button-dark" onClick="saveClient()">Salvar</button>
         </div>
     </form>
 </div>

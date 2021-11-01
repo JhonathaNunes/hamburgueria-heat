@@ -1,22 +1,31 @@
-function justNumbers(elemt) {
-    let regex = /[^\d]/g;
-    elemt.value = elemt.value.replaceAll(regex, "");
+function phoneIsValid(phone) {
+    const regex = /^(\([1-9]{2}\)|[\d]{2})\s?[9]?[\d]{4}-?[\d]{4}$/;
+    const phoneMathces = phone.match(regex);
+
+    return  phoneMathces !== null;
 }
 
-function cpfIsValid (cpf) {
-    if((cpf = cpf.replace(/[^\d]/g,"")).length !== 11) return false;
+function cepIsValid(cep) {
+    const regex = /^[\d]{5}-?[\d]{3}$/;
+    const cepMatches = cep.match(regex);
+    
+    return  cepMatches !== null;
+}
+
+function cpfIsValid(cpf) {
+    if((cpf = cpf.replace(/[^\d]/g,'')).length !== 11) return false;
 
     if (
-        cpf === "00000000000" ||
-        cpf === "11111111111" ||
-        cpf === "22222222222" || 
-        cpf === "33333333333" ||
-        cpf === "44444444444" ||
-        cpf === "55555555555" ||
-        cpf === "66666666666" ||
-        cpf === "77777777777" ||
-        cpf === "88888888888" ||
-        cpf === "99999999999"
+        cpf === '00000000000' ||
+        cpf === '11111111111' ||
+        cpf === '22222222222' || 
+        cpf === '33333333333' ||
+        cpf === '44444444444' ||
+        cpf === '55555555555' ||
+        cpf === '66666666666' ||
+        cpf === '77777777777' ||
+        cpf === '88888888888' ||
+        cpf === '99999999999'
     ) return false;
 
     let result;
@@ -43,27 +52,9 @@ function cpfIsValid (cpf) {
     return true;
 }
 
-function setInvalidCPFMessage(){
-    let cpfErrado = document.getElementsByClassName('CPFInvalido')[0];
-    cpfErrado.style.color='red';
-}
+function addressNumberIsValid(number) {
+    const regex = /^[\d]{5}$/
+    const numerMatches = number.match(regex);
 
-function removeInvalidCPFMessage(){
-    let cpfErrado = document.getElementsByClassName('CPFInvalido')[0];
-    cpfErrado.style.color='red';
-}
-
-function validarCPF(cpf) {
-    removeInvalidCPFMessage();
-
-    let statusCpf = cpfIsValid(cpf.value);
-
-    if (!statusCpf){
-        setInvalidCPFMessage();
-    }
-}
-
-function apenasCaracteres(elemt){
-    let regex = /[^A-Za-zÀ-ú ?à-ú?À-Ú']/g;
-    elemt.value = elemt.value.replaceAll(regex, "");
+    return numerMatches !== null;
 }

@@ -15,6 +15,7 @@
                     alert('Erro ' + xhr.status);
                 }
             };
+
             xhr.send();
         }
         
@@ -22,6 +23,11 @@
             let nameInput = $('#name');
             let descriptionInput = $('#description');
             let err = 0;
+
+            nameInput.removeClass('invalid');
+            descriptionInput.removeClass('invalid');
+
+            $('#name-invalid, #descprition-invalid').hide();
 
             if (!nameInput.val() || nameInput.val().length > 20) {
                 nameInput.addClass('invalid');
@@ -39,7 +45,7 @@
                 return false;
             }
 
-            $('#form').submit()
+            $('#form').submit();
         }
     </script>
     {% endblock %}
@@ -52,22 +58,22 @@
             <label for="name">Nome</label>
             <input type="text" id="name" name="name" class="form-control" maxlength="20" required value="{{category.name}}"/>
             <div id="name-invalid" class="invalid-field">
-                Preencha o nome da categoria
+                Preencha o campo nome
             </div>
         </div>
         <div class="form-group">
             <label for="description">Descrição</label>
             <textarea class="form-control" id="description" name="description" rows="3" maxlength="255" required>{{category.description}}</textarea>
             <div id="descprition-invalid" class="invalid-field">
-                Preencha a descrição da categoria
+                Preencha a descrição
             </div>
         </div>
         <div class="form-group d-flex justify-content-between">
-            <button type="button" class="btn button-outlined" onclick="history.back()">Cancelar</button>
+            <button type="button" class="btn button-outlined" onClick="history.back()">Cancelar</button>
             {% if category %}
-            <button type="button" class="btn button-outlined" onclick="deleteCategory()">Excluir</button>
+            <button type="button" class="btn button-outlined" onClick="deleteCategory()">Excluir</button>
             {% endif %}
-            <button type="button" class="btn button-dark" onclick="saveCategory()">Salvar</button>
+            <button type="button" class="btn button-dark" onClick="saveCategory()">Salvar</button>
         </div>
     </form>
 </div>

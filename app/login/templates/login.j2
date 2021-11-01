@@ -16,11 +16,9 @@
         <form method="POST" action="/login/">
             <img class="login-logo" src="/static/images/logo.png" alt="logo "/>
             <label for="username">Usuário</label>
-
-            
             <input type="text" id="username" name="username" class="form-control" required />
             <label for="password">Senha</label>
-            <input type="password" id="password" name="password" pattern="[A-Za-z ?à-ú?À-Ú]{3,255}" class="form-control" required />
+            <input type="password" id="password" name="password" class="form-control" required />
             <div class="g-recaptcha" data-sitekey="{{recaptcha}}" data-theme="dark" style="margin-top:25px;"></div>
             <button type="submit" class="btn button-dark button-margin">Login</button>
             {% with messages = get_flashed_messages() %}
