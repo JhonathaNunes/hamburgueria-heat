@@ -1,5 +1,5 @@
 function phoneIsValid(phone) {
-    const regex = /^(\([1-9]{2}\)|[\d]{2})\s?[9]?[\d]{4}-?[\d]{4}$/;
+    const regex = /^(\([1-9]{2}\)|[1-9]{2})\s?[9]?[\d]{4}-?[\d]{4}$/;
     const phoneMathces = phone.match(regex);
 
     return  phoneMathces !== null;
