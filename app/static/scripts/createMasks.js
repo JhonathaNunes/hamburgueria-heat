@@ -15,4 +15,4 @@ $(function ($) {
         $('#cep').mask('00000-000');
         $('#number').mask('0#')
     });
-})(jQuery);
+});

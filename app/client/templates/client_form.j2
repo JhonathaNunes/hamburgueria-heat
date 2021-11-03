@@ -59,7 +59,7 @@
                 err++;
             }
 
-            if (!cepInput.val() || cepIsValid(cepInput.val())) {
+            if (!cepInput.val() || !cepIsValid(cepInput.val())) {
                 cepInput.addClass('invalid');
                 $('#cep-invalid').show();
                 err++;
@@ -71,7 +71,7 @@
                 err++;
             }
 
-            if (!numberInput.val() || numberAddressIsValid(numberInput.val())) {
+            if (!numberInput.val() || !addressNumberIsValid(numberInput.val())) {
                 numberInput.addClass('invalid');
                 $('#number-invalid').show();
                 err++;
@@ -86,6 +86,10 @@
             if (err > 0) {
                 return false;
             }
+
+            phoneInput.unmask();
+            cpfInput.unmask();
+            cepInput.unmask();
 
             $('#form').submit();
         }
