@@ -53,7 +53,7 @@ function cpfIsValid(cpf) {
 }
 
 function addressNumberIsValid(number) {
-    const regex = /^[\d]{5}$/
+    const regex = /^[\d]+$/
     const numerMatches = number.match(regex);
 
     return numerMatches !== null;
