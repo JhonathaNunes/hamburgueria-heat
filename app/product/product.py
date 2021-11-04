@@ -99,7 +99,7 @@ def create_product():
 
     product.name = form['name']
     product.description = form['description']
-    product.quantity = int(form['quantity'])
+    product.quantity = int(form['quantity']) if (form['quantity']) else None
     product.price = float(form['price'])
     product.category_id = int(form['category'])
     product.photo_url = save_file_upload()
@@ -151,6 +151,7 @@ def update_product(id: int):
 
     product.name = form['name']
     product.description = form['description']
+    product.quantity = int(form['quantity']) if (form['quantity']) else None
     product.price = float(form['price'])
     product.category_id = int(form['category'])
     product.photo_url = save_file_upload()

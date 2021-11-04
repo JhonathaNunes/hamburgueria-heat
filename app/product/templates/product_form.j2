@@ -1,6 +1,6 @@
 {% extends "admin_base.j2" %}
-{% if product %}
-    {% block aditional_header %}
+{% block aditional_header %}
+    <script src="/static/scripts/createMasks.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', function() {
             if (!document.getElementById('img-preview').src) {
@@ -27,40 +27,84 @@
         function createURL(input) {
             if (input.files && input.files[0]) {
                 document.getElementById('img-preview').src = URL.createObjectURL(input.files[0]);
-                document.getElementById('preview-container').style.display = "block";
+                document.getElementById('preview-container').style.display = 'block';
             } else {
-                document.getElementById('preview-container').style.display = "none";
+                document.getElementById('preview-container').style.display = 'none';
             }
         }
 
-        function apenasCaracteres(elemt){
-            let regex = /[^A-Za-z ?à-ú?À-Ú']/g;
-            elemt.value = elemt.value.replaceAll(regex, "");
-        }
-        
-        function justNumbers(){
-            let regex = /[^0-9]/g;
-            elemt.value = elemt.value.replaceAll(regex, "");
+        function saveProduct() {
+            let nameInput = $('#name');
+            let priceInput = $('#price');
+            let categoryInput = $('#category');
+            let descriptionInput = $('#description');
+            let err = 0;
+
+            nameInput.removeClass('invalid');
+            priceInput.removeClass('invalid');
+            categoryInput.removeClass('invalid');
+            descriptionInput.removeClass('invalid');
+
+            $('#name-invalid #price-invalid #category-invalid #description-invalid').hide();
+
+            if (!nameInput.val() || nameInput.length > 150) {
+                nameInput.addClass('invalid');
+                $('#name-invalid').show();
+                err++;
+            }
+
+            let priceAsNumber = !priceInput.val() ? null : parseFloat(priceInput.val().replace(".", "").replace(",", "."))
+
+            if (priceAsNumber <= 0) {
+                priceInput.addClass('invalid');
+                $('#price-invalid').show();
+                err++;
+            }
+
+            if (!categoryInput.val()) {
+                categoryInput.addClass('invalid');
+                $('#category-invalid').show();
+                err++;
+            }
+
+            if (!descriptionInput.val() || descriptionInput.val().length > 255) {
+                descriptionInput.addClass('invalid');
+                $('#description-invalid').show();
+                err++;
+            }
+
+            if (err > 0) {
+                return false;
+            }
+
+            priceInput.unmask();
+            priceInput.val(priceAsNumber);
+
+            $('#form').submit();
         }
     </script>
-    {% endblock %}
-{% endif %}
+{% endblock %}
 {% block content %}
 <h2 class="page-title">{{title}}</h2>
 <div class="d-flex justify-content-center align-items-center">
-    <form class="form-style card" method="POST" action="{{action}}" enctype="multipart/form-data">
+    <form id="form" class="form-style card" method="POST" action="{{action}}" enctype="multipart/form-data" novalidate>
         <div class="form-group">
             <label for="name">Nome</label>
-            <input type="text" id="name" name="name" pattern="[A-Za-z ?à-ú?À-Ú']"  onkeyup="apenasCaracteres(this)" onchange="apenasCaracteres(this)" maxlength="255" class="form-control" required value="{{product.name}}"/>
-            <span></span>
+            <input type="text" id="name" name="name"  maxlength="150" class="form-control" required value="{{product.name}}"/>
+            <div id="name-invalid" class="invalid-field">
+                Preencha o campo nome
+            </div>
         </div>
         <div class="form-group">
             <label for="quantity">Quantidade</label>
-            <input type="text" id="quantity" name="quantity"  pattern="[0-9]{1,5}" onkeyup="apenasCaracteres(this)" onchange="apenasCaracteres(this)" maxlength="5" class="form-control" required value="{{product.quantity}}"/>
+            <input type="text" id="quantity" name="quantity" maxlength="5" class="form-control" value="{{product.quantity}}"/>
         </div>
         <div class="form-group">
             <label for="price">Preço</label>
-            <input type="text" id="price" name="price" class="form-control" pattern="[0-9,]{3,7}" maxlength="7" onkeyup="justNumbers(this)" onchange="justNumbers(this)" required value="{{product.price}}"/>
+            <input type="text" id="price" name="price" class="form-control" maxlength="9" required value="{{product.price}}"/>
+            <div id="price-invalid" class="invalid-field">
+                Preencha com um valor maior que 0
+            </div>
         </div>
         <div class="form-group">
             <label for="category">Categoria</label>
@@ -71,6 +115,9 @@
                 </option>
                 {% endfor %}
             </select>
+            <div id="category-invalid" class="invalid-field">
+                Selecione uma categoria
+            </div>
         </div>
         <div class="mb-3">
             <label for="fileInput" class="form-label">Imagem</label>
@@ -85,14 +132,17 @@
         </div>
         <div class="form-group">
             <label for="description">Descrição</label>
-            <textarea class="form-control" id="description" name="description" rows="3" size="3" pattern="[A-Za-z\s]" maxlength="255" required>{{product.description}}</textarea>
+            <textarea class="form-control" id="description" name="description" rows="3" size="3" maxlength="255" required>{{product.description}}</textarea>
+            <div id="description-invalid" class="invalid-field">
+                Preencha o campo descrição
+            </div>
         </div>
         <div class="form-group d-flex justify-content-between">
             <button type="button" class="btn button-outlined" onClick="history.back()">Cancelar</button>
             {% if product %}
             <button type="button" class="btn button-outlined" onClick="deleteProduct()">Excluir</button>
             {% endif %}
-            <button type="submit" class="btn button-dark">Salvar</button>
+            <button type="button" class="btn button-dark" onClick="saveProduct()">Salvar</button>
         </div>
     </form>
 </div>

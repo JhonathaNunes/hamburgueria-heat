@@ -13,6 +13,7 @@ $(function ($) {
         $('#phone').mask(maskBehavior, phoneOptions);
         $('#cpf').mask('000.000.000-00');
         $('#cep').mask('00000-000');
-        $('#number').mask('0#')
+        $('#number #quantity').mask('0#');
+        $('#price').mask('##.000,00', { reverse: true });
     });
 });
