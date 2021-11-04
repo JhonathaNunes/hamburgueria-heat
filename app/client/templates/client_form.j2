@@ -1,6 +1,5 @@
 {% extends "admin_base.j2" %}
-{% if category %}
-    {% block aditional_header %}
+{% block aditional_header %}
     <script src="/static/scripts/validators.js"></script>
     <script src="/static/scripts/createMasks.js"></script>
     <script>
@@ -94,8 +93,7 @@
             $('#form').submit();
         }
     </script>
-    {% endblock %}
-{% endif %}
+{% endblock %}
 {% block content %}
 <h2 class="page-title">{{title}}</h2>
 <div class="d-flex justify-content-center align-items-center">
