@@ -18,9 +18,33 @@
             xhr.send();
         }
 
-        function apenasCaracteres(elemt){
-            let regex = /[^A-Za-z ?à-ú?À-Ú']/g;
-            elemt.value = elemt.value.replaceAll(regex, "");
+        function saveUser() {
+            let nameInput = $('#name');
+            let userInput = $('#username');
+            let err = 0;
+
+            nameInput.removeClass('invalid');
+            userInput.removeClass('invalid');
+
+            $('#name-invalid #username-invalid').hide();
+
+            if (!nameInput.val() || nameInput.val().length > 255) {
+                nameInput.addClass('invalid');
+                $('#name-invalid').show();
+                err++;
+            }
+
+            if (!userInput.val() || userInput.val().length > 50) {
+                userInput.addClass('invalid');
+                $('#username-invalid').show();
+                err++;
+            }
+
+            if (err > 0) {
+                return false;
+            }
+
+            $('#form').submit();
         }
 
     </script>
@@ -29,14 +53,14 @@
 {% block content %}
 <h2 class="page-title">{{title}}</h2>
 <div class="d-flex justify-content-center align-items-center">
-    <form class="form-style card" method="POST" action="{{action}}">
+    <form id="form" class="form-style card" method="POST" action="{{action}}" novalidate>
         <div class="form-group">
             <label for="name">Nome</label>
-            <input type="text" id="name" name="name"  onkeyup="apenasCaracteres(this)" onchange="apenasCaracteres(this)"  pattern="[A-Za-z ?à-ú?À-Ú']{3,255}" class="form-control" required value="{{user.name}}"/>
+            <input type="text" id="name" name="name" class="form-control" maxlength="255" required value="{{user.name}}"/>
         </div>
         <div class="form-group">
             <label for="description">Nome do Usuário</label>
-            <input type="text" id="username" name="username" pattern="[A-Za-z0-9_]{3,255}" class="form-control" required value="{{user.username}}"/>
+            <input type="text" id="username" name="username" class="form-control" maxlength="20" required value="{{user.username}}"/>
         </div>
         <div class="form-group">
             <label for="description">Senha</label>
@@ -86,7 +110,7 @@
             {% if user %}
             <button type="button" class="btn button-outlined" onClick="deleteUser()">Excluir</button>
             {% endif %}
-            <button type="submit" class="btn button-dark">Salvar</button>
+            <button type="button" class="btn button-dark" onClick="saveUser()">Salvar</button>
         </div>
     </form>
 </div>
