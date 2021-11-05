@@ -16,6 +16,7 @@ class Client(db.Model):
     full_name = db.Column(db.String(250), nullable=False)
     phone = db.Column(db.String(11), nullable=False)
     cpf = db.Column(db.String(11), nullable=False)
+    cep = db.Column(db.String(8), nullable=False)
     street = db.Column(db.String(255), nullable=False)
     number = db.Column(db.String(6), nullable=False)
     district = db.Column(db.String(50), nullable=False)
