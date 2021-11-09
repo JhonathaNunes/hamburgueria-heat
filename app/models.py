@@ -62,28 +62,20 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
-    user_roles = db.relationship('UserRole', backref='users', lazy=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(Config.SECRET_KEY, expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
-    @staticmethod
     def verify_reset_token(token):
         s = Serializer(Config.SECRET_KEY)
         try:
             user_id = s.loads(token)['user_id']
         except:
             return None
+
         return User.query.get(user_id)
-
-
-class UserRole(db.Model):
-    __tablename__ = 'user_roles'
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    user = db.relationship('User')
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    role = db.relationship('Role')
 
 
 class Order(db.Model):

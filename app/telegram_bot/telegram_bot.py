@@ -84,7 +84,7 @@ def show_menu(update: Update, context: CallbackContext):
         for p in products:
             (name, price, description) = p
             menu += (
-                f'{name} ... R$ {locale.format('%.2f', price)}'
+                f'{name} ... R$ {locale.format("%.2f", price)}'
                 f'\n{description}\n'
             )
 
