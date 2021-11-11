@@ -52,7 +52,6 @@ def delete_file(file_id):
 
 
 @product_dp.route('/admin/product/file/<file_id>')
-@login_required
 def download_file(file_id):
     project_path = path.abspath(getcwd())
 

@@ -148,3 +148,39 @@ h1, h2, h3, h4, h5 {
     font-size: 14px;
     display: none;
 }
+
+.accordion-toggle {
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid #171717;
+    text-align: left;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.card-margin {
+    margin: 25px 0;
+}
+
+.products-panel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+    padding: 25px 0;
+    margin-bottom: 25px;
+}
+
+.product-image-container {
+    height: 200px;
+    width: 100%;
+}
+
+.product-image {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.image-contain {
+    object-fit: contain;
+}

@@ -7,6 +7,7 @@ from .models import db, User
 def init_app():
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object(Config)
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
 
     with app.app_context():
         db.init_app(app)
@@ -18,7 +19,7 @@ def init_app():
         from .category import category
         from .user import user
         from .product import product
-        from .catalog import catalog
+        from .menu import menu
 
         app.register_blueprint(login.login_bp)
         app.register_blueprint(admin.admin_bp)
@@ -26,7 +27,7 @@ def init_app():
         app.register_blueprint(category.category_bp)
         app.register_blueprint(user.user_bp)
         app.register_blueprint(product.product_dp)
-        app.register_blueprint(catalog.catalog_bp)
+        app.register_blueprint(menu.menu_bp)
 
         login_manager = LoginManager()
         login_manager.login_message = '''É preciso estar logado para acessar

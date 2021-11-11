@@ -10,16 +10,13 @@ from flask import (
 )
 from app.models import Category
 
-catalog_bp = Blueprint(
-    'catalog', __name__, template_folder='templates'
+menu_bp = Blueprint(
+    'menu', __name__, template_folder='templates'
 )
 
 
-@catalog_bp.route('/', methods=['GET'])
+@menu_bp.route('/', methods=['GET'])
 def index():
     categories = Category.query.all()
 
-    for c in categories:
-        print(c)
-        print(c.products)
-    return "Hoi"
+    return render_template('menu_index.j2', categories=categories)
