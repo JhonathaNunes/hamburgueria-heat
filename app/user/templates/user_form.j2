@@ -91,7 +91,7 @@
                     name="role"
                     pattern="[A]"
                     value="A"
-                    {% if user.role.code == 'A' %} checked {% endif %}
+                    {% if user.role and user.role.code == 'A' %} checked {% endif %}
                 >
                 <label class="form-check-label" for="adm">
                     Administrador
@@ -106,7 +106,7 @@
                     name="role"
                     pattern="[U]"
                     value="U"
-                    {% if user.role.code == 'U' %} checked {% endif %}
+                    {% if user.role and user.role.code == 'U' %} checked {% endif %}
                 >
                 <label class="form-check-label" for="usr">
                         Usuário Comum
