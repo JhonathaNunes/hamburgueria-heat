@@ -7,7 +7,6 @@ from app.email.mailer import send_mail
 from config import Config
 import threading
 from requests import api
-from config import Config
 
 login_bp = Blueprint(
     'login', __name__, template_folder='templates'
@@ -35,16 +34,21 @@ def login():
     )
 
     if not response.json()['success']:
-        flash('Preencha o reCaptcha')
+        flash('Preencha o reCaptcha', 'error')
         return redirect(url_for('login.render_login'))
 
     username = request.form.get('username')
     password = request.form.get('password')
 
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter(
+        (User.username == username) | (User.email == username)
+    ).first()
 
     if not user or not check_password_hash(user.password, password):
-        flash('Não foi possível fazer login. Usuário ou senha incorretos')
+        flash(
+            'Não foi possível fazer login. Usuário ou senha incorretos',
+            'error'
+        )
         return redirect(url_for('login.render_login'))
 
     login_user(user)
@@ -88,6 +92,10 @@ def recover_password_login():
         'entity': entity,
         'images': ['logo.png']
     }
+
+    # TODO: Make this thead inside the send_email function since all e-mails are async
+    # allow login with email
+    # create user password using this same function instead of actualy create the password
     th = threading.Thread(target=send_mail, args=[params_email])
     th.start()
 

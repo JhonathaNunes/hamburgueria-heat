@@ -28,12 +28,14 @@
                     {{ errors[0] }}
                 </div>
             {% endif %}
+            {% endwith %}
             {% with warning = get_flashed_messages(category_filter=["warning"]) %}
             {% if warning %}
                 <div class="alert alert-warning">
                     {{ warning[0] }}
                 </div>
             {% endif %}
+            {% endwith %}
             {% with success = get_flashed_messages(category_filter=["success"]) %}
             {% if success %}
                 <div class="alert alert-success">
