@@ -57,6 +57,7 @@ def logout():
     logout_user()
     return redirect(url_for('login.login'))
 
+
 @login_bp.route('/recover_password/', methods=['GET'])
 def recover_password():
     if current_user.is_authenticated:
@@ -64,14 +65,15 @@ def recover_password():
 
     return render_template('recover_password.j2')
 
+
 @login_bp.route('/recover_password/', methods=['POST'])
 def recover_password_login():
     email = request.form.get('email')
     user = User.query.filter_by(email=email).first()
     if user is None:
-        flash('E-mail não encontrado na base', 'warning')
-        return redirect(url_for('login.recover_password')) 
-    
+        flash('E-mail não cadastrado', 'warning')
+        return redirect(url_for('login.recover_password'))
+
     token = user.get_reset_token()
     entity = {}
     entity['name'] = user.name
@@ -92,24 +94,25 @@ def recover_password_login():
     flash('Instruções foram enviadas para seu e-mail!', 'info')
     return redirect(url_for('login.render_login'))
 
-@login_bp.route('/reset_password/<token>', methods=['GET','POST'])
+
+@login_bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('admin.index'))
 
-    print(token)
     user = User.verify_reset_token(token)
-    print(user)
-    if user is None: 
+
+    if user is None:
         flash('Token expirado ou inválido', 'warning')
         return redirect(url_for('login.recover_password'))
-    
+
+    if request.method == "GET":
+        return render_template('reset_password.j2', token=token)
+
     senha = request.form.get('password')
-    print(senha)
-    if senha is None:
-        return render_template('reset_password.j2', token = token)
-    
+
     user.password = generate_password_hash(senha)
     db.session.commit()
-    flash('Senha foi salva com sucesso', 'warning')
+
+    flash('Senha foi salva com sucesso', 'success')
     return redirect(url_for('login.render_login'))
