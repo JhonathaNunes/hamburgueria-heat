@@ -1,7 +1,15 @@
+from io import BytesIO
 from flask_sqlalchemy import SQLAlchemy, Model
 import sqlalchemy as sa
 from datetime import datetime
 from flask_login import UserMixin
+import base64
+import requests
+from config import Config
+from flask import json
+import pyqrcode
+from PIL import Image
+from flask import send_file
 
 
 class IdModel(Model):
@@ -97,3 +105,65 @@ class OrderProduct(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
     products = db.relationship('Product')
     quantity = db.Column(db.Integer)
+
+
+class PixModel():
+    def __init__(self) -> None:
+        self.headers = {
+            'Authorization': f'Bearer {self.get_token()}',
+            'Content-Type': 'application/json'
+        }
+
+    def get_token(self):
+        auth = base64.b64encode(
+            (f'{Config.PIX_CLIENT_ID}:{Config.PIX_SECRET}').encode()
+        ).decode()
+
+        headers = {
+            'Authorization': f'Basic {auth}',
+            'Content-Type': 'application/json'
+        }
+
+        payload = {'grant_type': 'client_credentials'}
+
+        response = requests.post(
+            f'{Config.PIX_URL}/oauth/token',
+            headers=headers,
+            data=json.dumps(payload),
+            cert=Config.CERTIFICATE
+        )
+
+        return json.loads(response.content)['access_token']
+
+    def create_qrcode(self, location_id):
+        response = requests.get(
+            f'{Config.PIX_URL}/v2/loc/{location_id}/qrcode',
+            headers=self.headers,
+            cert=Config.CERTIFICATE
+        )
+
+        return json.loads(response.content)
+
+    def create_order(self, txid, payload):
+        response = requests.put(
+            f'{Config.PIX_URL}/v2/cob/{txid}',
+            data=json.dumps(payload),
+            headers=self.headers,
+            cert=Config.CERTIFICATE
+        )
+
+        if response.status_code == 201:
+            return json.loads(response.content)
+
+        return {}
+
+    def qrcode_gererator(self, location_id):
+        qrcode = self.create_qrcode(location_id)
+
+        return qrcode['imagemQrcode']
+
+    def create_charge(self, txid, payload):
+        location_id = self.create_order(txid, payload).get('loc').get('id')
+        qrcode = self.qrcode_gererator(location_id)
+
+        return qrcode

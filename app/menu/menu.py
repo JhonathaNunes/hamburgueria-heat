@@ -9,7 +9,8 @@ from flask import (
     send_from_directory,
     jsonify
 )
-from app.models import Category, Product
+from app.models import Category, PixModel, Product
+from rstr import xeger
 
 menu_bp = Blueprint(
     'menu', __name__, template_folder='templates'
@@ -47,3 +48,22 @@ def checkout():
         total += product.price * product_qtd['qt_ordered']
 
     return render_template('checkout.j2', products=products_with_qtd, total=total)
+
+
+@menu_bp.route('/docheckout', methods=['POST'])
+def do_checkout():
+    txid = xeger(r'^[a-zA-Z0-9]{26,35}$')
+    payload = {
+        "calendario": {
+            "expiracao": 3600
+        },
+        "valor": {
+            "original": "5.00"
+        },
+        "chave": "e76ed44e-cc9c-47d8-b092-61da1a5443a9"
+    }
+
+    pix = PixModel()
+
+    response = pix.create_charge(txid, payload)
+    return response
