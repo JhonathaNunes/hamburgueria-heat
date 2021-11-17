@@ -71,7 +71,7 @@ def recover_password_login():
     email = request.form.get('email')
     user = User.query.filter_by(email=email).first()
     if user is None:
-        flash('E-mail não cadastrado', 'warning')
+        flash('E-mail não cadastrado', 'error')
         return redirect(url_for('login.recover_password'))
 
     token = user.get_reset_token()
@@ -91,7 +91,7 @@ def recover_password_login():
     th = threading.Thread(target=send_mail, args=[params_email])
     th.start()
 
-    flash('Instruções foram enviadas para seu e-mail!', 'info')
+    flash('Instruções foram enviadas para seu e-mail!', 'warning')
     return redirect(url_for('login.render_login'))
 
 

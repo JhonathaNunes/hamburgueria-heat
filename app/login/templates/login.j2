@@ -21,7 +21,7 @@
             <input type="password" id="password" name="password" class="form-control" required />
             <div class="g-recaptcha" data-sitekey="{{recaptcha}}" data-theme="dark" style="margin-top:25px;"></div>
             <button type="submit" class="btn button-dark button-margin">Login</button>
-            <a href="/recover_password/" >Recuperar senha</a>
+            <a href="/recover_password/" class="link-dark">Recuperar senha</a>
             {% with errors = get_flashed_messages(category_filter=["error"]) %}
             {% if errors %}
                 <div class="alert alert-danger">
