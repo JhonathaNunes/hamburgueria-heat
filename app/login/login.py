@@ -3,9 +3,8 @@ from flask_login.utils import login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.models import db, User
 from flask_login import current_user
-from app.email.mailer import send_mail
+from app.email.mailer import EmailThread
 from config import Config
-import threading
 from requests import api
 
 login_bp = Blueprint(
@@ -93,11 +92,8 @@ def recover_password_login():
         'images': ['logo.png']
     }
 
-    # TODO: Make this thead inside the send_email function since all e-mails are async
-    # allow login with email
-    # create user password using this same function instead of actualy create the password
-    th = threading.Thread(target=send_mail, args=[params_email])
-    th.start()
+    # TODO: create user password using this same function instead of actualy create the password
+    EmailThread(params_email).start()
 
     flash('Instruções foram enviadas para seu e-mail!', 'warning')
     return redirect(url_for('login.render_login'))

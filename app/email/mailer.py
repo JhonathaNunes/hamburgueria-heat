@@ -7,6 +7,7 @@ from config import Config
 import smtplib
 import jinja2
 import os
+from threading import Thread
 
 
 def render_without_request(template_name, **template_vars):
@@ -15,6 +16,37 @@ def render_without_request(template_name, **template_vars):
     )
     template = env.get_template(template_name)
     return template.render(**template_vars)
+
+
+def attach_documents(msg, paths):
+    for path in paths:
+        attachment = open(path, 'rb')
+
+        # Lê o arquivo no modo binário
+        att = MIMEBase('application', 'octet-stream')
+        att.set_payload(attachment.read())
+        encoders.encode_base64(att)
+
+        # Adiciona cabeçalho no tipo anexo de e-mail
+        att.add_header('Content-Disposition', 'attachment')
+        attachment.close()
+
+        # Vincula anexo no corpo do e-mail
+        msg.attach(att)
+
+
+def attach_images(msg, images):
+    count = 1
+    for image in images:
+
+        attachment = open(os.path.join('app/static/images/', image), 'rb')
+        msgImage = MIMEImage(attachment.read())
+        attachment.close()
+
+        msgImage.add_header('Content-ID', f'<image{count}>')
+        msg.attach(msgImage)
+
+        count = count + 1
 
 
 def send_mail(params: dict):
@@ -62,32 +94,10 @@ def send_mail(params: dict):
     server.quit()
 
 
-def attach_documents(msg, paths):
-    for path in paths:
-        attachment = open(path, 'rb')
-
-        # Lê o arquivo no modo binário
-        att = MIMEBase('application', 'octet-stream')
-        att.set_payload(attachment.read())
-        encoders.encode_base64(att)
-
-        # Adiciona cabeçalho no tipo anexo de e-mail
-        att.add_header('Content-Disposition', 'attachment')
-        attachment.close()
-
-        # Vincula anexo no corpo do e-mail
-        msg.attach(att)
-
-
-def attach_images(msg, images):
-    count = 1
-    for image in images:
-
-        attachment = open(os.path.join('app/static/images/', image), 'rb')
-        msgImage = MIMEImage(attachment.read())
-        attachment.close()
-
-        msgImage.add_header('Content-ID', f'<image{count}>')
-        msg.attach(msgImage)
-
-        count = count + 1
+class EmailThread(Thread):
+    def __init__(self, params: dict):
+        self.params = params
+        Thread.__init__(self)
+    
+    def run(self) -> None:
+        send_mail(self.params)
