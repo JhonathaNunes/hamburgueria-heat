@@ -1,15 +1,18 @@
+function passwordIsValid(password) {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    return regex.test(password);
+}
+
 function phoneIsValid(phone) {
     const regex = /^(\([1-9]{2}\)|[1-9]{2})\s?[9]?[\d]{4}-?[\d]{4}$/;
-    const phoneMathces = phone.match(regex);
-
-    return  phoneMathces !== null;
+    
+    return regex.test(phone);
 }
 
 function cepIsValid(cep) {
     const regex = /^[\d]{5}-?[\d]{3}$/;
-    const cepMatches = cep.match(regex);
     
-    return  cepMatches !== null;
+    return  regex.test(cep);
 }
 
 function cpfIsValid(cpf) {
@@ -53,8 +56,7 @@ function cpfIsValid(cpf) {
 }
 
 function addressNumberIsValid(number) {
-    const regex = /^[\d]+$/
-    const numerMatches = number.match(regex);
+    const regex = /^[\d]+$/;
 
-    return numerMatches !== null;
+    return regex.test(number);
 }

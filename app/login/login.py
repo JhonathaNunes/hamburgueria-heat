@@ -6,6 +6,7 @@ from flask_login import current_user
 from app.email.mailer import EmailThread
 from config import Config
 from requests import api
+import re
 
 login_bp = Blueprint(
     'login', __name__, template_folder='templates'
@@ -110,12 +111,24 @@ def reset_token(token):
         flash('Token expirado ou inválido', 'warning')
         return redirect(url_for('login.recover_password'))
 
-    if request.method == "GET":
+    if request.method == 'GET':
         return render_template('reset_password.j2', token=token)
 
-    senha = request.form.get('password')
+    password = request.form.get('password')
 
-    user.password = generate_password_hash(senha)
+    pattern = '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$'
+    if not re.match(pattern, password):
+        flash('''A senha ter no mínimo 8 caracteres contendo uma letra maiúscula,
+            uma letra minúscula e um número''')
+        return render_template('reset_password.j2', token=token)
+
+    password_confirmation = request.form.get('rpassword')
+
+    if password != password_confirmation:
+        flash('As senhas precisam ser iguais', 'error')
+        return render_template('reset_password.j2', token=token)
+
+    user.password = generate_password_hash(password)
     db.session.commit()
 
     flash('Senha foi salva com sucesso', 'success')
