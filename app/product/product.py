@@ -28,15 +28,15 @@ def get_extension(filename: str) -> str:
 
 
 def save_file_upload() -> str:
-    if "file" not in request.files:
+    if 'file' not in request.files:
         return None
 
-    file = request.files["file"]
+    file = request.files['file']
     ext = get_extension(file.filename)
 
     if ext in ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp']:
         u = uuid1()
-        filename = f"{u}.{ext}"
+        filename = f'{u}.{ext}'
         file.save(path.join('product_pic', filename))
 
         return filename
@@ -158,7 +158,7 @@ def update_product(id: int):
 
     db.session.commit()
 
-    if "file" in request.files and old_product_photo:
+    if 'file' in request.files and old_product_photo:
         delete_file(old_product_photo)
 
     flash('Produto atualizado com sucesso')

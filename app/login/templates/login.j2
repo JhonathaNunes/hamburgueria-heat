@@ -21,10 +21,25 @@
             <input type="password" id="password" name="password" class="form-control" required />
             <div class="g-recaptcha" data-sitekey="{{recaptcha}}" data-theme="dark" style="margin-top:25px;"></div>
             <button type="submit" class="btn button-dark button-margin">Login</button>
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
+            <a href="/recover_password/" class="link-dark">Recuperar senha</a>
+            {% with errors = get_flashed_messages(category_filter=["error"]) %}
+            {% if errors %}
                 <div class="alert alert-danger">
-                    {{ messages[0] }}
+                    {{ errors[0] }}
+                </div>
+            {% endif %}
+            {% endwith %}
+            {% with warning = get_flashed_messages(category_filter=["warning"]) %}
+            {% if warning %}
+                <div class="alert alert-warning">
+                    {{ warning[0] }}
+                </div>
+            {% endif %}
+            {% endwith %}
+            {% with success = get_flashed_messages(category_filter=["success"]) %}
+            {% if success %}
+                <div class="alert alert-success">
+                    {{ success[0] }}
                 </div>
             {% endif %}
             {% endwith %}

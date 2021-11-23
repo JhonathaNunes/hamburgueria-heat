@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .titulo{
+        width: 100%;
+        padding: 15px 0px;
+        text-align: center;
+        background-color: #171717;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 1.8vw;
+        color: #FFFFFF;
+      }
+      .mensagem{
+        width: 100%;
+        padding: 25px 0px;
+        text-align: center;
+        background-color: #FCFCFC;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 1.5vw;
+        color: #171717;
+      }
+      .sucesso, .link{
+        width: 100%;
+      }
+      .link{
+        font-size: 1vw;
+      }
+      .link a{
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="titulo">Eba! Agora você faz parte do nosso time, {{ entity.name }}! </div>
+    <div class="mensagem">
+      <img src="cid:image1" height="320" width="320">
+      <div class="sucesso"> Seu cadastro foi efetuado com sucesso :) </div>
+      <div class="link"><a href="https://www.python.org/">Clique aqui</a> para fazer a autenticação da sua senha. </div>
+    </div>
+  </body>
+</html>

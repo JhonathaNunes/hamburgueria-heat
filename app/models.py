@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy, Model
 import sqlalchemy as sa
 from datetime import datetime
 from flask_login import UserMixin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from config import Config
 
 
 class IdModel(Model):
@@ -20,6 +22,7 @@ class Client(db.Model):
     street = db.Column(db.String(255), nullable=False)
     number = db.Column(db.String(6), nullable=False)
     district = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
     orders = db.relationship('Order', backref='clients')
 
 
@@ -57,8 +60,22 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(20), nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255))
+    email = db.Column(db.String(255), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(Config.SECRET_KEY, expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    def verify_reset_token(token):
+        s = Serializer(Config.SECRET_KEY)
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+
+        return User.query.get(user_id)
 
 
 class Order(db.Model):
