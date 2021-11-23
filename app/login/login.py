@@ -93,7 +93,6 @@ def recover_password_login():
         'images': ['logo.png']
     }
 
-    # TODO: create user password using this same function instead of actualy create the password
     EmailThread(params_email).start()
 
     flash('Instruções foram enviadas para seu e-mail!', 'warning')

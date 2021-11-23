@@ -1,8 +1,11 @@
 from os import path, getcwd
 from flask import Blueprint, render_template, request, flash, url_for, redirect
 from flask_login.utils import login_required
+from app.email.mailer import EmailThread
 from app.models import db, User, Role
 from werkzeug.security import generate_password_hash
+
+from config import Config
 
 user_bp = Blueprint(
     'user', __name__, template_folder='templates', static_folder='static'
@@ -47,13 +50,30 @@ def create_user():
 
     user.name = form['name']
     user.username = form['username']
-    user.password = generate_password_hash(form['password'])
     user.email = form['email']
 
     user.role = role
 
     db.session.add(user)
     db.session.commit()
+
+    token = user.get_reset_token()
+
+    entity = {}
+    entity['name'] = user.name
+    entity['url'] = url_for('login.reset_token', token=token, _external=True)
+
+    params_email = {
+        'text_type': 'html',
+        'sender': Config.EMAIL_USER,
+        'to': form['email'],
+        'subject': '🍔🔥 Cadastre sua senha | Hamburgueria Heat! 🔥🍔',
+        'template': 'reset_password_mail',
+        'entity': entity,
+        'images': ['logo.png']
+    }
+
+    EmailThread(params_email).start()
 
     flash('Usuário cadastrado com sucesso')
     return redirect(url_for('user.index'))
