@@ -6,6 +6,7 @@ instance/
 .pytest_cache/
 .coverage
 htmlcov/
+certificates/
 
 dist/
 build/
@@ -14,3 +15,5 @@ build/
 .env
 
 .vscode
+
+qrcode.jpg
