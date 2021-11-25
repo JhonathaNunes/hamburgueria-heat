@@ -43,7 +43,7 @@
                 <tr>
                     <td>Produto</td>
                     <td>Quantidade</td>
-                    <td>Preço</td>
+                    <td>Valor unitário</td>
                 </tr>
             </thead>
             <tbody>
@@ -51,7 +51,7 @@
                     <tr>
                         <td>{{product['name']}}</td>
                         <td>{{product['qt_ordered']}}</td>
-                        <td>{{product['price']}}</td>
+                        <td>{{product['price_formatted']}}</td>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -1,13 +1,7 @@
-from os import path, getcwd
 from flask import (
     Blueprint,
     render_template,
     request,
-    flash,
-    url_for,
-    redirect,
-    send_from_directory,
-    jsonify
 )
 from app.models import Category, PixModel, Product
 from rstr import xeger
@@ -25,11 +19,14 @@ def index():
 
 
 def joinProductAndQuantity(product: Product, items: list) -> dict:
-    quantity = list(filter(lambda el: el['id'] == product.id, items))[0]['quantity']
+    quantity = list(filter(
+        lambda el: el['id'] == product.id, items)
+    )[0]['quantity']
 
     product_dict = product.__dict__
     del product_dict['quantity']
     product_dict['qt_ordered'] = quantity
+    product_dict['price_formatted'] = "R$ {:,.2f}".format(product_dict['price'])
 
     return product_dict
 
@@ -47,7 +44,11 @@ def checkout():
         products_with_qtd.append(product_qtd)
         total += product.price * product_qtd['qt_ordered']
 
-    return render_template('checkout.j2', products=products_with_qtd, total=total)
+    return render_template(
+        'checkout.j2',
+        products=products_with_qtd,
+        total="R$ {:,.2f}".format(total)
+    )
 
 
 @menu_bp.route('/docheckout', methods=['POST'])
