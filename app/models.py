@@ -27,7 +27,7 @@ class Client(db.Model):
     number = db.Column(db.String(6), nullable=False)
     district = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(255), nullable=False)
-    orders = db.relationship('Order', backref='clients')
+    orders = db.relationship('Order', backref='client')
 
 
 class Status(db.Model):
@@ -95,10 +95,11 @@ class Order(db.Model):
         db.ForeignKey('clients.id'),
         nullable=False
     )
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User')
     note = db.Column(db.Text)
     products = db.relationship('OrderProduct', backref='order')
+    txid = db.Column(db.String(35))
     created_at = db.Column(
         db.DateTime,
         nullable=False,
@@ -116,7 +117,7 @@ class OrderProduct(db.Model):
     __tablename__ = 'order_products'
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
-    products = db.relationship('Product')
+    product = db.relationship('Product')
     quantity = db.Column(db.Integer)
 
 

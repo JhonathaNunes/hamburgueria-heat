@@ -8,28 +8,16 @@
         });
     </script>
     <script>
-        function generateQRCode() {
-            {# const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/docheckout')
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = () => {
-                if (xhr.status === 200 || xhr.status === 404) {
-                    document.open();
-                    document.write(xhr.response);
-                    document.close();
-                } else {
-                    alert('Erro ' + xhr.status);
-                }
-            }
-            xhr.send(); #}
-
-            $(document).ready( function() { 
+        function goToRegister() {
+            $(document).ready( function() {
                 $.ajax({
-                    type: "POST",
-                    url:'/docheckout',
-                    success: function(data){
-                        $('body').html('<img src="' + data + '" />');
-                    },
+                    type: "GET",
+                    url:'{{url_for('menu.self_register_view')}}',
+                    success: function(response){
+                        document.open();
+                        document.write(response);
+                        document.close();
+                    }
                 });
             })
         }
@@ -59,6 +47,6 @@
         <div class="d-flex justify-content-end">
             <b>Total:</b> {{total}}
         </div>
-        <button type="button" class="btn button-outlined" onClick="generateQRCode()">Pagar</button>
+        <button type="button" class="btn button-outlined" onClick="goToRegister()">Pagar</button>
     </div>
 {% endblock %}

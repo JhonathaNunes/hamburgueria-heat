@@ -1,0 +1,9 @@
+{% extends "client_base.j2" %}
+{% block aditional_header %}
+    <script>
+        cleanBag()
+    </script>
+{% endblock %}
+{% block content %}
+    <img src="{{qr_code}}"/>
+{% endblock %}

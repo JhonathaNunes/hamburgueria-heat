@@ -1,6 +1,12 @@
 const BAG_KEY = "SHOPPING_BAG"
 
 function goToShoppingBag() {
+    if (!getShoppingBag()) {
+        alert("Você não tem itens na sacola!");
+
+        return;
+    }
+
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/checkout')
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -13,11 +19,15 @@ function goToShoppingBag() {
             alert('Erro ' + xhr.status);
         }
     }
-    xhr.send(JSON.stringify(getShoppingBag()));
+    xhr.send(getShoppingBagAsString());
 }
 
 function getShoppingBag() {
     return JSON.parse(localStorage.getItem(BAG_KEY));
+}
+
+function getShoppingBagAsString() {
+    return localStorage.getItem(BAG_KEY)
 }
 
 function addItemToBag(item_id, item_name, item_price) {
@@ -39,4 +49,8 @@ function addItemToBag(item_id, item_name, item_price) {
     }
 
     localStorage.setItem(BAG_KEY, JSON.stringify(bag));
+}
+
+function cleanBag() {
+    localStorage.removeItem(BAG_KEY)
 }
