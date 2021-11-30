@@ -100,7 +100,7 @@
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: (response) => {
-                        let tab = window.open('about:blank', '_self');
+                        let tab = window.open('', '_self');
                         tab.document.write(response);
                         tab.document.close();
                     }

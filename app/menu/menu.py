@@ -50,12 +50,10 @@ def client_self_register():
         client = Client()
         is_new_client = True
 
-
-    client = Client.query.filter_by(cpf=form['cpf']).first() or Client()
-
     client.full_name = form['full_name']
     client.phone = form['phone']
     client.cep = form['cep']
+    client.cpf = form['cpf']
     client.street = form['street']
     client.number = form['number']
     client.district = form['district']
