@@ -184,3 +184,23 @@ h1, h2, h3, h4, h5 {
 .image-contain {
     object-fit: contain;
 }
+
+.orders-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-card {
+    margin: 15px;
+    padding: 15px;
+    border: 1px solid #171717;
+    border-radius: 15px;
+}
+
+.product-list {
+    border-bottom: 1px solid #171717;
+}
+
+.quantity {
+    margin-right: 20px;
+}
