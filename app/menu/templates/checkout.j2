@@ -1,0 +1,52 @@
+{% extends "client_base.j2" %}
+{% block aditional_header %}
+    <script>
+        $(document).ready(function () {
+            $('.accordion-toggle').click(function () {
+                $(this.nextElementSibling).toggle(300);
+            });
+        });
+    </script>
+    <script>
+        function goToRegister() {
+            $(document).ready( function() {
+                $.ajax({
+                    type: "GET",
+                    url:'{{url_for('menu.self_register_view')}}',
+                    success: function(response){
+                        document.open();
+                        document.write(response);
+                        document.close();
+                    }
+                });
+            })
+        }
+    </script>
+{% endblock %}
+{% block content %}
+    <h2 class="page-title">Checkout</h2>
+    <div class="flex-grow-1">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>Produto</td>
+                    <td>Quantidade</td>
+                    <td>Valor unitário</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{product['name']}}</td>
+                        <td>{{product['qt_ordered']}}</td>
+                        <td>{{product['price_formatted']}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-end">
+            <b>Total:</b> {{total}}
+        </div>
+        <button type="button" class="btn button-outlined" onClick="goToRegister()">Pagar</button>
+    </div>
+{% endblock %}

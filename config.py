@@ -11,6 +11,10 @@ class Config:
     TELEGRAM_TOKEN = environ.get('TELEGRAM_TOKEN')
     RECAPTCHA_SITE_KEY = environ.get('RECAPTCHA_SITE_KEY')
     RECAPTCHA_VALIDATION_KEY = environ.get('RECAPTCHA_VALIDATION_KEY')
+    PIX_CLIENT_ID = environ.get('PIX_CLIENT_ID')
+    PIX_SECRET = environ.get('PIX_SECRET')
+    PIX_URL = environ.get('PIX_URL')
+    CERTIFICATE = 'app/certificates/certificate.pem'
     __DB_USER = environ.get('DB_USER')
     __DB_PASSWORD = environ.get('DB_PASSWORD')
     __DB_HOST = environ.get('DB_HOST')

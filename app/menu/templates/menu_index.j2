@@ -1,0 +1,45 @@
+{% extends "client_base.j2" %}
+{% block aditional_header %}
+    <script>
+        $(document).ready(function () {
+            $('.accordion-toggle').click(function () {
+                $(this.nextElementSibling).toggle(300);
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <h2 class="page-title">Menu</h2>
+    {% for category in categories %}
+        <button class="accordion-toggle">{{category.name}}</button>
+        <div class="products-panel">
+            {% for product in category.products %}
+                <div class="card card-margin" style="width: 18rem;">
+                    <div class="product-image-container">
+                        {% if product.photo_url %}
+                            <img class="product-image" src="{{ url_for('product.download_file', file_id=product.photo_url) }}" alt="Card image cap">
+                        {% else %}
+                                <img class="product-image image-contain" src="/static/images/no-photo.png" alt="preview">   
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{product.name}}</h5>
+                        <p class="card-text" style="height: 72px;">
+                            {% if product.description | length > 83 %}
+                                {{product.description[:80]}}...
+                            {% else %}
+                                {{product.description}}
+                            {% endif %}
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <span>{{product.price}}</span>
+                            <button class="btn button-dark" onclick="addItemToBag({{product.id}}, '{{product.name}}', {{product.price}})">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>Sem produtos nessa categoria</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

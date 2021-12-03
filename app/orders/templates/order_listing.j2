@@ -1,0 +1,26 @@
+{% extends "admin_base.j2" %}
+{% block content %}
+<h2 class="page-title">Pedidos</h2>
+<div class="orders-container">
+    {% for order in data %}
+    <div class="order-card">
+        <div class="client-description">
+            <h3>{{order.client.full_name}}</h1>
+            <p>
+                E-mail: {{order.client.email}} - Tel: {{order.client.phone}} <br/>
+                Endereço: {{order.client.street}}, {{order.client.number}} - {{order.client.district}} <br/>
+                CEP: {{order.client.cep}} <br/>
+            </p>
+        </div>
+        <h4>Pedido</h4>
+        <div class="products-listing">
+            {% for product in order.products %}
+                <div class="product-list">
+                    <span class="quantity">{{product.quantity}}x</span> {{product.product.name}}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

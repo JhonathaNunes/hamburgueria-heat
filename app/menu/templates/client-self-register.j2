@@ -1,25 +1,8 @@
-{% extends "admin_base.j2" %}
+{% extends "client_base.j2" %}
 {% block aditional_header %}
     <script src="/static/scripts/validators.js"></script>
     <script src="/static/scripts/createMasks.js"></script>
     <script>
-        function deleteClient() {
-            if (!confirm("Você tem certeza?")) return;
-            xhr = new XMLHttpRequest();
-            xhr.open('DELETE', "/admin/client/{{client.id}}");
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function() {
-                if (xhr.readyState !== 4) return;
-                if (xhr.status === 200 || xhr.status === 404) {
-                    window.location.replace("{{url_for("client.index")}}");
-                } else {
-                    alert('Erro ' + xhr.status);
-                }
-            };
-
-            xhr.send();
-        }
-
         function saveClient() {
             let fullNameInput = $('#name');
             let phoneInput = $('#phone');
@@ -98,75 +81,96 @@
             cpfInput.unmask();
             cepInput.unmask();
 
-            $('#form').submit();
+            const data = {
+                'full_name': fullNameInput.val(),
+                'phone': phoneInput.val(),
+                'email': emailInput.val(),
+                'cpf': cpfInput.val(),
+                'cep': cepInput.val(),
+                'street': streetInput.val(),
+                'number': numberInput.val(),
+                'district': districtInput.val(),
+                'bag': getShoppingBagAsString()
+            }
+
+            $(document).ready(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: '/client/self-register',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: (response) => {
+                        let tab = window.open('', '_self');
+                        tab.document.write(response);
+                        tab.document.close();
+                    }
+                })
+            });
         }
     </script>
 {% endblock %}
 {% block content %}
-<h2 class="page-title">{{title}}</h2>
+<h2 class="page-title">Cadastro de usuário</h2>
 <div class="d-flex justify-content-center align-items-center">
-    <form id="form" class="form-style card" method="POST" action="{{action}}" novalidate>
+    <form id="form" class="form-style card" method="POST" novalidate>
         <div class="form-group">
             <label for="full_name">Nome Completo</label>
-            <input type="text" id="name" name="full_name" maxlength="250" class="form-control" required value="{{client.full_name}}"/>
+            <input type="text" id="name" name="full_name" maxlength="250" class="form-control" required/>
             <div id="name-invalid" class="invalid-field">
                 Preencha o campo nome
             </div>
         </div>
         <div class="form-group">
-            <label for="cpf">CPF</label>
-            <input type="text" id="cpf" name="cpf" class="form-control" maxlength="9" required value="{{client.cpf}}"/>
-            <div id="cpf-invalid" class="invalid-field">
-                Preencha com um CPF válido
-            </div>
-        </div>
-        <div class="form-group">
             <label for="phone">Telefone</label>
-            <input type="text" id="phone" name="phone" class="form-control" maxlength="15" required value="{{client.phone}}"/>
+            <input type="text" id="phone" name="phone" class="form-control" maxlength="15" required/>
             <div id="phone-invalid" class="invalid-field">
                 Preencha com um telefone válido
             </div>
         </div>
         <div class="form-group">
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" name="cpf" class="form-control" maxlength="9" required/>
+            <div id="cpf-invalid" class="invalid-field">
+                Preencha com um CPF válido
+            </div>
+        </div>
+        <div class="form-group">
             <label for="email">E-mail</label>
-            <input type="text" id="email" name="email" class="form-control" required value="{{client.email}}"/>
+            <input type="text" id="email" name="email" class="form-control" required/>
             <div id="email-invalid" class="invalid-field">
                 Preencha com um e-mail válido
             </div>
         </div>
         <div class="form-group">
             <label for="cep">CEP</label>
-            <input type="text" id="cep" name="cep" class="form-control" maxlength="9" required value="{{client.cep}}"/>
+            <input type="text" id="cep" name="cep" class="form-control" maxlength="9" required/>
             <div id="cep-invalid" class="invalid-field">
                 Preencha com um CEP válido
             </div>
         </div>
         <div class="form-group">
             <label for="street">Logradouro</label>
-            <input type="text" id="street" name="street" class="form-control" maxlength="250" required value="{{client.street}}"/>
+            <input type="text" id="street" name="street" class="form-control" maxlength="250" required/>
             <div id="street-invalid" class="invalid-field">
                 Preencha o campo logradouro
             </div>
         </div>
         <div class="form-group">
             <label for="number">Número</label>
-            <input type="text" id="number" name="number" maxlength="6" class="form-control" required value="{{client.number}}"/>
+            <input type="text" id="number" name="number" maxlength="6" class="form-control" required/>
             <div id="number-invalid" class="invalid-field">
                 Preencha o campo número
             </div>
         </div>
         <div class="form-group">
             <label for="district">Bairro</label>
-            <input type="text" id="district" name="district" class="form-control" maxlength="50" required value="{{client.district}}"/>
+            <input type="text" id="district" name="district" class="form-control" maxlength="50" required/>
             <div id="district-invalid" class="invalid-field">
                 Preencha o campo bairro
             </div>
         </div>
         <div class="form-group d-flex justify-content-between">
             <button type="button" class="btn button-outlined" onClick="history.back()">Cancelar</button>
-            {% if client %}
-            <button type="button" class="btn button-outlined" onClick="deleteClient()">Excluir</button>
-            {% endif %}
             <button type="button" class="btn button-dark" onClick="saveClient()">Salvar</button>
         </div>
     </form>
