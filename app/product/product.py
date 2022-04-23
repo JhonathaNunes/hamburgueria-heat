@@ -150,7 +150,8 @@ def update_product(id: int):
 
     product.name = form['name']
     product.description = form['description']
-    product.quantity = int(form['quantity']) if (form['quantity']) else None
+    if (form['quantity'] != 'None' and form['quantity'] is not None):
+        product.quantity = int(form['quantity'])
     product.price = float(form['price'])
     product.category_id = int(form['category'])
     product.photo_url = save_file_upload()
